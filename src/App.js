@@ -128,6 +128,7 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     platformUrl: "https://www.amazon.com",
     hasAnalysis: false,
     analysisUrl: null
+  },
   {
     id: 7,
     title: "Goliath",
