@@ -20,7 +20,9 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     international: false,
     historicalAvailability: ["Netflix (2022-present)"],
     streamingUrl: "https://www.netflix.com/title/81222768",
-    platformUrl: "https://www.netflix.com"
+    platformUrl: "https://www.netflix.com",
+    hasAnalysis: true,
+    analysisUrl: "https://lawyouamerica.com/pop-court/the-lincoln-lawyer"
   },
   {
     id: 2,
@@ -39,7 +41,9 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     international: false,
     historicalAvailability: ["USA Network (2011-2019)", "Netflix (2017-present)"],
     streamingUrl: "https://www.netflix.com/title/70195800",
-    platformUrl: "https://www.netflix.com"
+    platformUrl: "https://www.netflix.com",
+    hasAnalysis: false,
+    analysisUrl: null
   },
   {
     id: 3,
@@ -58,7 +62,9 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     international: false,
     historicalAvailability: ["AMC (2015-2022)", "Netflix (2016-present)"],
     streamingUrl: "https://www.netflix.com/title/80021955",
-    platformUrl: "https://www.netflix.com"
+    platformUrl: "https://www.netflix.com",
+    hasAnalysis: false,
+    analysisUrl: null
   },
   {
     id: 4,
@@ -77,7 +83,9 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     international: false,
     historicalAvailability: ["CBS (2009-2016)", "Amazon Prime (2018-present)", "Hulu (2020-2023)"],
     streamingUrl: "https://www.amazon.com/gp/video/detail/B00DGDVSJ0",
-    platformUrl: "https://www.amazon.com/gp/video/storefront"
+    platformUrl: "https://www.amazon.com/gp/video/storefront",
+    hasAnalysis: false,
+    analysisUrl: null
   },
   {
     id: 5,
@@ -96,7 +104,9 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     international: true,
     historicalAvailability: ["BBC One (2011-2014)", "BritBox (2020-present)"],
     streamingUrl: "https://www.britbox.com/us/show/silk",
-    platformUrl: "https://www.britbox.com"
+    platformUrl: "https://www.britbox.com",
+    hasAnalysis: false,
+    analysisUrl: null
   },
   {
     id: 6,
@@ -390,16 +400,26 @@ function LegalStreamingDirectory() {
             Watch Now
           </button>
           
-          {/* Secondary button for your content */}
-          <button 
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded text-sm font-medium flex items-center"
-            onClick={() => {
-              window.open(`https://lawyouamerica.com/pop-court/${item.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`, '_blank');
-            }}
-            title="Read our analysis"
-          >
-            <ExternalLink className="w-4 h-4" />
-          </button>
+          {/* Analysis button - only show if analysis exists */}
+          {item.hasAnalysis ? (
+            <button 
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded text-sm font-medium flex items-center"
+              onClick={() => {
+                window.open(item.analysisUrl, '_blank');
+              }}
+              title="Read our analysis"
+            >
+              <ExternalLink className="w-4 h-4" />
+            </button>
+          ) : (
+            <button 
+              className="bg-gray-300 text-gray-500 px-3 py-2 rounded text-sm font-medium flex items-center cursor-not-allowed"
+              disabled
+              title="Analysis coming soon"
+            >
+              <ExternalLink className="w-4 h-4" />
+            </button>
+          )}
         </div>
       </div>
 
