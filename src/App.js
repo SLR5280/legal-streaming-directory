@@ -19,7 +19,7 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     trending: true,
     international: false,
     historicalAvailability: ["Netflix (2022-present)"],
-    streamingUrl: "https://www.netflix.com/title/81222768",
+    streamingUrl: "https://www.netflix.com/title/81303831",
     platformUrl: "https://www.netflix.com",
     hasAnalysis: true,
     analysisUrl: "https://lawyouamerica.com/pop-court/the-lincoln-lawyer"
@@ -82,7 +82,7 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     trending: false,
     international: false,
     historicalAvailability: ["CBS (2009-2016)", "Amazon Prime (2018-present)", "Hulu (2020-2023)"],
-    streamingUrl: "https://www.amazon.com/gp/video/detail/B00DGDVSJ0",
+    streamingUrl: "https://www.amazon.com/The-Good-Wife-Season-1/dp/B0064MGU98",
     platformUrl: "https://www.amazon.com/gp/video/storefront",
     hasAnalysis: false,
     analysisUrl: null
@@ -93,7 +93,7 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     type: "TV Series",
     year: 2011,
     subgenres: ["Criminal"],
-    platform: "BritBox",
+    platform: "Amazon Prime",
     currentlyAvailable: true,
     rating: 8.1,
     synopsis: "British barristers compete for silk status at a London chambers.",
@@ -103,8 +103,8 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     trending: false,
     international: true,
     historicalAvailability: ["BBC One (2011-2014)", "BritBox (2020-present)"],
-    streamingUrl: "https://www.britbox.com/us/show/silk",
-    platformUrl: "https://www.britbox.com",
+    streamingUrl: "https://www.amazon.com/Silk-Season-1/dp/B00ESB68HQ",
+    platformUrl: "https://www.amazon.com",
     hasAnalysis: false,
     analysisUrl: null
   },
@@ -114,7 +114,7 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     type: "TV Series",
     year: 2018,
     subgenres: ["Family"],
-    platform: "BritBox",
+    platform: "Amazon Prime",
     currentlyAvailable: true,
     rating: 7.8,
     synopsis: "Family of divorce lawyers navigate professional and personal relationships.",
@@ -123,8 +123,11 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     hidden_gem: true,
     trending: false,
     international: true,
-    historicalAvailability: ["BBC One (2018-2022)", "BritBox (2021-present)"]
-  },
+    historicalAvailability: ["BBC One (2018-2022)", "BritBox (2021-present)"],
+    streamingUrl: "https://www.amazon.com/The-Split-Season-1/dp/B07D21MHBW",
+    platformUrl: "https://www.amazon.com",
+    hasAnalysis: false,
+    analysisUrl: null
   {
     id: 7,
     title: "Goliath",
@@ -140,7 +143,11 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     hidden_gem: false,
     trending: false,
     international: false,
-    historicalAvailability: ["Amazon Prime (2016-2021)"]
+    historicalAvailability: ["Amazon Prime (2016-2021)"],
+    streamingUrl: "https://www.amazon.com/Goliath-Season-1/dp/B0875SSWFS",
+    platformUrl: "https://www.amazon.com",
+    hasAnalysis: false,
+    analysisUrl: null
   },
   {
     id: 8,
@@ -157,7 +164,11 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     hidden_gem: false,
     trending: false,
     international: false,
-    historicalAvailability: ["ABC (2004-2008)", "Hulu (2019-present)", "Netflix (2015-2018)"]
+    historicalAvailability: ["ABC (2004-2008)", "Hulu (2019-present)", "Netflix (2015-2018)"],
+    streamingUrl: "https://www.hulu.com/series/boston-legal-2cd2fbc0-6cc2-49d8-a78b-bcd661482db6",
+    platformUrl: "https://www.hulu.com",
+    hasAnalysis: false,
+    analysisUrl: null
   },
   {
     id: 9,
@@ -165,7 +176,7 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     type: "TV Series",
     year: 1997,
     subgenres: ["Civil", "Family"],
-    platform: "Tubi",
+    platform: "Hulu",
     currentlyAvailable: true,
     rating: 6.8,
     synopsis: "Young lawyer navigates romance and career at Boston law firm.",
@@ -175,8 +186,10 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     trending: false,
     international: false,
     historicalAvailability: ["Fox (1997-2002)", "Netflix (2010-2015)", "Tubi (2020-present)"],
-    streamingUrl: "https://tubitv.com/series/2418/ally_mcbeal",
-    platformUrl: "https://tubitv.com"
+    streamingUrl: "https://www.hulu.com/series/ally-mcbeal-be5f7f99-ad45-40af-986b-550654fb6f52",
+    platformUrl: "https://www.hulu.com",
+    hasAnalysis: false,
+    analysisUrl: null
   },
   {
     id: 10,
@@ -184,7 +197,7 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     type: "Movie",
     year: 1982,
     subgenres: ["Civil"],
-    platform: "HBO Max",
+    platform: "Apple TV+",
     currentlyAvailable: true,
     rating: 7.7,
     synopsis: "An alcoholic lawyer takes on a medical malpractice case that could redeem his career.",
@@ -193,7 +206,11 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     hidden_gem: false,
     trending: false,
     international: false,
-    historicalAvailability: ["HBO Max (2020-present)", "Amazon Prime (2018-2020)"]
+    historicalAvailability: ["HBO Max (2020-present)", "Amazon Prime (2018-2020)"],
+    streamingUrl: "https://tv.apple.com/us/movie/the-verdict/umc.cmc.1ur632crpht2qe010rai5iw7d",
+    platformUrl: "https://tv.apple.com/",
+    hasAnalysis: false,
+    analysisUrl: null
   },
   {
     id: 11,
@@ -201,7 +218,7 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     type: "TV Series",
     year: 2010,
     subgenres: ["Criminal"],
-    platform: "Acorn TV",
+    platform: "Pluto TV",
     currentlyAvailable: true,
     rating: 8.6,
     synopsis: "Self-destructive Australian barrister takes on impossible cases.",
@@ -210,7 +227,11 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     hidden_gem: true,
     trending: false,
     international: true,
-    historicalAvailability: ["ABC Australia (2010-2018)", "Acorn TV (2019-present)", "Netflix (2016-2019)"]
+    historicalAvailability: ["ABC Australia (2010-2018)", "Acorn TV (2019-present)", "Netflix (2016-2019)"],
+    streamingUrl: "https://pluto.tv/us/on-demand/series/68228748a21058b98fed9a36/season/1?utm_medium=textsearch&utm_source=google",
+    platformUrl: "https://pluto.tv/",
+    hasAnalysis: false,
+    analysisUrl: null
   },
   {
     id: 12,
@@ -218,7 +239,7 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     type: "TV Series",
     year: 2020,
     subgenres: ["Criminal", "Family"],
-    platform: "Paramount+",
+    platform: "Netflix",
     currentlyAvailable: true,
     rating: 7.6,
     synopsis: "A judge compromises his integrity when his son is involved in a hit-and-run.",
@@ -227,7 +248,11 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     hidden_gem: false,
     trending: true,
     international: false,
-    historicalAvailability: ["Showtime (2020-2023)", "Paramount+ (2021-present)"]
+    historicalAvailability: ["Showtime (2020-2023)", "Paramount+ (2021-present)"],
+    streamingUrl: "https://www.netflix.com/title/81684531",
+    platformUrl: "https://www.netflix.com/",
+    hasAnalysis: false,
+    analysisUrl: null
   },
   {
     id: 13,
@@ -244,7 +269,11 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     hidden_gem: true,
     trending: false,
     international: true,
-    historicalAvailability: ["CBC (2021-present)", "The CW (2022-present)"]
+    historicalAvailability: ["CBC (2021-present)", "The CW (2022-present)"],
+    streamingUrl: "https://www.cwtv.com/shows/family-law/",
+    platformUrl: "https://www.cwtv.com/",
+    hasAnalysis: false,
+    analysisUrl: null
   },
   {
     id: 14,
@@ -252,7 +281,7 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     type: "Movie",
     year: 1992,
     subgenres: ["Criminal"],
-    platform: "Netflix",
+    platform: "Pluto TV",
     currentlyAvailable: true,
     rating: 7.7,
     synopsis: "Military lawyers defend Marines accused of murder in this courtroom drama.",
@@ -261,7 +290,11 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     hidden_gem: false,
     trending: false,
     international: false,
-    historicalAvailability: ["Netflix (2023-present)", "Amazon Prime (2018-2022)", "Hulu (2016-2020)"]
+    historicalAvailability: ["Netflix (2023-present)", "Amazon Prime (2018-2022)", "Hulu (2016-2020)"],
+    streamingUrl: "https://pluto.tv/us/search/details/movies/64c013550a21a300132add4a?utm_medium=textsearch&utm_source=google",
+    platformUrl: "https://www.pluto.tv/",
+    hasAnalysis: false,
+    analysisUrl: null
   },
   {
     id: 15,
@@ -278,7 +311,11 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     hidden_gem: false,
     trending: false,
     international: false,
-    historicalAvailability: ["Netflix (2019-present)"]
+    historicalAvailability: ["Netflix (2019-present)"],
+    streamingUrl: "https://www.netflix.com/title/80200549",
+    platformUrl: "https://www.netflix.com/",
+    hasAnalysis: false,
+    analysisUrl: null
   }
 ];
 
@@ -336,7 +373,7 @@ function LegalStreamingDirectory() {
       'Apple TV+': 'bg-gray-800',
       'Paramount+': 'bg-blue-500',
       'BritBox': 'bg-indigo-600',
-      'Acorn TV': 'bg-orange-600',
+      'Pluto TV': 'bg-orange-600',
       'Tubi': 'bg-yellow-600',
       'The CW': 'bg-emerald-600'
     };
