@@ -15,7 +15,6 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     synopsis: "Mickey Haller runs his law practice from his Lincoln Town Car while handling high-stakes cases in Los Angeles.",
     director: "David E. Kelley",
     seasons: 3,
-    hidden_gem: false,
     trending: true,
     international: false,
     historicalAvailability: ["Netflix (2022-present)"],
@@ -36,7 +35,6 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     synopsis: "A brilliant college dropout works at a top law firm despite never attending law school.",
     director: "Aaron Korsh",
     seasons: 9,
-    hidden_gem: false,
     trending: true,
     international: false,
     historicalAvailability: ["USA Network (2011-2019)", "Netflix (2017-present)"],
@@ -57,7 +55,6 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     synopsis: "Prequel to Breaking Bad following Jimmy McGill's transformation into Saul Goodman.",
     director: "Vince Gilligan",
     seasons: 6,
-    hidden_gem: false,
     trending: false,
     international: false,
     historicalAvailability: ["AMC (2015-2022)", "Netflix (2016-present)"],
@@ -78,7 +75,6 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     synopsis: "Alicia Florrick returns to law after her politician husband's scandal.",
     director: "Robert King",
     seasons: 7,
-    hidden_gem: false,
     trending: false,
     international: false,
     historicalAvailability: ["CBS (2009-2016)", "Amazon Prime (2018-present)", "Hulu (2020-2023)"],
@@ -99,7 +95,6 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     synopsis: "British barristers compete for silk status at a London chambers.",
     director: "Peter Moffat",
     seasons: 3,
-    hidden_gem: true,
     trending: false,
     international: true,
     historicalAvailability: ["BBC One (2011-2014)", "BritBox (2020-present)"],
@@ -120,7 +115,6 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     synopsis: "Family of divorce lawyers navigate professional and personal relationships.",
     director: "Abi Morgan",
     seasons: 3,
-    hidden_gem: true,
     trending: false,
     international: true,
     historicalAvailability: ["BBC One (2018-2022)", "BritBox (2021-present)"],
@@ -141,7 +135,6 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     synopsis: "Disgraced lawyer Billy McBride takes on powerful corporations.",
     director: "David E. Kelley",
     seasons: 4,
-    hidden_gem: false,
     trending: false,
     international: false,
     historicalAvailability: ["Amazon Prime (2016-2021)"],
@@ -162,7 +155,6 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     synopsis: "Eccentric lawyers Alan Shore and Denny Crane handle unusual cases.",
     director: "David E. Kelley",
     seasons: 5,
-    hidden_gem: false,
     trending: false,
     international: false,
     historicalAvailability: ["ABC (2004-2008)", "Hulu (2019-present)", "Netflix (2015-2018)"],
@@ -183,7 +175,6 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     synopsis: "Young lawyer navigates romance and career at Boston law firm.",
     director: "David E. Kelley",
     seasons: 5,
-    hidden_gem: false,
     trending: false,
     international: false,
     historicalAvailability: ["Fox (1997-2002)", "Netflix (2010-2015)", "Tubi (2020-present)"],
@@ -204,7 +195,6 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     synopsis: "An alcoholic lawyer takes on a medical malpractice case that could redeem his career.",
     director: "Sidney Lumet",
     seasons: null,
-    hidden_gem: false,
     trending: false,
     international: false,
     historicalAvailability: ["HBO Max (2020-present)", "Amazon Prime (2018-2020)"],
@@ -225,7 +215,6 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     synopsis: "Self-destructive Australian barrister takes on impossible cases.",
     director: "Peter Duncan",
     seasons: 5,
-    hidden_gem: true,
     trending: false,
     international: true,
     historicalAvailability: ["ABC Australia (2010-2018)", "Acorn TV (2019-present)", "Netflix (2016-2019)"],
@@ -246,7 +235,6 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     synopsis: "A judge compromises his integrity when his son is involved in a hit-and-run.",
     director: "Peter Moffat",
     seasons: 2,
-    hidden_gem: false,
     trending: true,
     international: false,
     historicalAvailability: ["Showtime (2020-2023)", "Paramount+ (2021-present)"],
@@ -267,7 +255,6 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     synopsis: "Canadian family lawyer rebuilds her career and relationships.",
     director: "Susin Nielsen",
     seasons: 4,
-    hidden_gem: true,
     trending: false,
     international: true,
     historicalAvailability: ["CBC (2021-present)", "The CW (2022-present)"],
@@ -288,7 +275,6 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     synopsis: "Military lawyers defend Marines accused of murder in this courtroom drama.",
     director: "Rob Reiner",
     seasons: null,
-    hidden_gem: false,
     trending: false,
     international: false,
     historicalAvailability: ["Netflix (2023-present)", "Amazon Prime (2018-2022)", "Hulu (2016-2020)"],
@@ -309,7 +295,6 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     synopsis: "True story of the Central Park Five and the injustice they faced.",
     director: "Ava DuVernay",
     seasons: 1,
-    hidden_gem: false,
     trending: false,
     international: false,
     historicalAvailability: ["Netflix (2019-present)"],
@@ -334,35 +319,58 @@ function LegalStreamingDirectory() {
   const [selectedPlatform, setSelectedPlatform] = useState('All Platforms');
   const [selectedSubgenre, setSelectedSubgenre] = useState('All Subgenres');
   const [selectedType, setSelectedType] = useState('All Types');
+  const [sortBy, setSortBy] = useState('title-asc');
   const [showFilters, setShowFilters] = useState(false);
-  const [currentView, setCurrentView] = useState('all'); // 'all', 'trending', 'hidden-gems', 'international'
+  const [currentView, setCurrentView] = useState('all'); // 'all', 'trending', 'international'
 
   // Filter and search logic
   const filteredContent = useMemo(() => {
-    return legalContentDatabase.filter(item => {
-      const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          item.synopsis.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          item.director.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesPlatform = selectedPlatform === 'All Platforms' || 
-                            item.platform === selectedPlatform;
-      
-      const matchesSubgenre = selectedSubgenre === 'All Subgenres' || 
-                            item.subgenres.includes(selectedSubgenre);
-      
-      const matchesType = selectedType === 'All Types' || item.type === selectedType;
+  let filtered = legalContentDatabase.filter(item => {
+    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        item.synopsis.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        item.director.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesPlatform = selectedPlatform === 'All Platforms' || 
+                          item.platform === selectedPlatform;
+    
+    const matchesSubgenre = selectedSubgenre === 'All Subgenres' || 
+                          item.subgenres.includes(selectedSubgenre);
+    
+    const matchesType = selectedType === 'All Types' || item.type === selectedType;
 
-      const matchesView = currentView === 'all' || 
-                         (currentView === 'trending' && item.trending) ||
-                         (currentView === 'hidden-gems' && item.hidden_gem) ||
-                         (currentView === 'international' && item.international);
-      
-      return matchesSearch && matchesPlatform && matchesSubgenre && matchesType && matchesView;
+    const matchesView = currentView === 'all' || 
+                       (currentView === 'trending' && item.trending) ||
+                       (currentView === 'international' && item.international);
+    
+    return matchesSearch && matchesPlatform && matchesSubgenre && matchesType && matchesView;
+  });
+
+  // Apply sorting
+  filtered.sort((a, b) => {
+    switch (sortBy) {
+      case 'title-asc':
+        return a.title.localeCompare(b.title);
+      case 'title-desc':
+        return b.title.localeCompare(a.title);
+      case 'year-newest':
+        return b.year - a.year;
+      case 'year-oldest':
+        return a.year - b.year;
+      case 'rating-high':
+        return b.rating - a.rating;
+      case 'rating-low':
+        return a.rating - b.rating;
+      default:
+        return 0;
+    }
+  });
+
+  return filtered;
+}, [searchTerm, selectedPlatform, selectedSubgenre, selectedType, currentView, sortBy]);
     });
   }, [searchTerm, selectedPlatform, selectedSubgenre, selectedType, currentView]);
 
   const trendingCount = legalContentDatabase.filter(item => item.trending).length;
-  const hiddenGemCount = legalContentDatabase.filter(item => item.hidden_gem).length;
   const internationalCount = legalContentDatabase.filter(item => item.international).length;
 
   const getPlatformColor = (platform) => {
@@ -390,7 +398,6 @@ function LegalStreamingDirectory() {
         </div>
         <div className="flex items-center space-x-2">
           {item.trending && <TrendingUp className="w-4 h-4 text-orange-500" title="Trending" />}
-          {item.hidden_gem && <Eye className="w-4 h-4 text-purple-500" title="Hidden Gem" />}
           {item.international && <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">International</span>}
         </div>
       </div>
@@ -521,17 +528,6 @@ function LegalStreamingDirectory() {
               Trending ({trendingCount})
             </button>
             <button
-              onClick={() => setCurrentView('hidden-gems')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap flex items-center ${
-                currentView === 'hidden-gems' 
-                  ? 'border-indigo-500 text-indigo-600' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              <Eye className="w-4 h-4 mr-1" />
-              Hidden Gems ({hiddenGemCount})
-            </button>
-            <button
               onClick={() => setCurrentView('international')}
               className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
                 currentView === 'international' 
@@ -574,7 +570,22 @@ function LegalStreamingDirectory() {
           </div>
 
           {showFilters && (
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
+            <div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+  <select
+    value={sortBy}
+    onChange={(e) => setSortBy(e.target.value)}
+    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+  >
+    <option value="title-asc">Title A-Z</option>
+    <option value="title-desc">Title Z-A</option>
+    <option value="year-newest">Newest First</option>
+    <option value="year-oldest">Oldest First</option>
+    <option value="rating-high">Highest Rated</option>
+    <option value="rating-low">Lowest Rated</option>
+  </select>
+</div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Platform</label>
                 <select
