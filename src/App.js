@@ -367,7 +367,6 @@ function LegalStreamingDirectory() {
 
   return filtered;
 }, [searchTerm, selectedPlatform, selectedSubgenre, selectedType, currentView, sortBy]);
-    });
 
   const trendingCount = legalContentDatabase.filter(item => item.trending).length;
   const internationalCount = legalContentDatabase.filter(item => item.international).length;
