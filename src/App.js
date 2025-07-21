@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingUp, Eye } from 'lucide-react';
 
 // Sample comprehensive database with real legal content
-const legalContentDatabase = [
+  const legalContentDatabase = [
   {
     id: 1,
     title: "The Lincoln Lawyer",
@@ -18,7 +18,9 @@ const legalContentDatabase = [
     hidden_gem: false,
     trending: true,
     international: false,
-    historicalAvailability: ["Netflix (2022-present)"]
+    historicalAvailability: ["Netflix (2022-present)"],
+    streamingUrl: "https://www.netflix.com/title/81222768",
+    platformUrl: "https://www.netflix.com"
   },
   {
     id: 2,
@@ -35,7 +37,9 @@ const legalContentDatabase = [
     hidden_gem: false,
     trending: true,
     international: false,
-    historicalAvailability: ["USA Network (2011-2019)", "Netflix (2017-present)"]
+    historicalAvailability: ["USA Network (2011-2019)", "Netflix (2017-present)"],
+    streamingUrl: "https://www.netflix.com/title/70195800",
+    platformUrl: "https://www.netflix.com"
   },
   {
     id: 3,
@@ -52,7 +56,9 @@ const legalContentDatabase = [
     hidden_gem: false,
     trending: false,
     international: false,
-    historicalAvailability: ["AMC (2015-2022)", "Netflix (2016-present)"]
+    historicalAvailability: ["AMC (2015-2022)", "Netflix (2016-present)"],
+    streamingUrl: "https://www.netflix.com/title/80021955",
+    platformUrl: "https://www.netflix.com"
   },
   {
     id: 4,
@@ -69,7 +75,9 @@ const legalContentDatabase = [
     hidden_gem: false,
     trending: false,
     international: false,
-    historicalAvailability: ["CBS (2009-2016)", "Amazon Prime (2018-present)", "Hulu (2020-2023)"]
+    historicalAvailability: ["CBS (2009-2016)", "Amazon Prime (2018-present)", "Hulu (2020-2023)"],
+    streamingUrl: "https://www.amazon.com/gp/video/detail/B00DGDVSJ0",
+    platformUrl: "https://www.amazon.com/gp/video/storefront"
   },
   {
     id: 5,
@@ -86,7 +94,9 @@ const legalContentDatabase = [
     hidden_gem: true,
     trending: false,
     international: true,
-    historicalAvailability: ["BBC One (2011-2014)", "BritBox (2020-present)"]
+    historicalAvailability: ["BBC One (2011-2014)", "BritBox (2020-present)"],
+    streamingUrl: "https://www.britbox.com/us/show/silk",
+    platformUrl: "https://www.britbox.com"
   },
   {
     id: 6,
@@ -154,7 +164,9 @@ const legalContentDatabase = [
     hidden_gem: false,
     trending: false,
     international: false,
-    historicalAvailability: ["Fox (1997-2002)", "Netflix (2010-2015)", "Tubi (2020-present)"]
+    historicalAvailability: ["Fox (1997-2002)", "Netflix (2010-2015)", "Tubi (2020-present)"],
+    streamingUrl: "https://tubitv.com/series/2418/ally_mcbeal",
+    platformUrl: "https://tubitv.com"
   },
   {
     id: 10,
@@ -367,11 +379,26 @@ function LegalStreamingDirectory() {
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium flex items-center"
             onClick={() => {
               // Analytics tracking would go here
-              window.open(`https://lawyouamerica.com/pop-court/${item.title.toLowerCase().replace(/\s+/g, '-')}`, '_blank');
+              if (item.streamingUrl) {
+                window.open(item.streamingUrl, '_blank');
+              } else {
+                window.open(item.platformUrl, '_blank');
+              }
             }}
           >
             <Play className="w-4 h-4 mr-1" />
             Watch Now
+          </button>
+          
+          {/* Secondary button for your content */}
+          <button 
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded text-sm font-medium flex items-center"
+            onClick={() => {
+              window.open(`https://lawyouamerica.com/pop-court/${item.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`, '_blank');
+            }}
+            title="Read our analysis"
+          >
+            <ExternalLink className="w-4 h-4" />
           </button>
         </div>
       </div>
