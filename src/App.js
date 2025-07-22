@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingUp, Eye, Grid3X3, List } from 'lucide-react';
+import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingUp, Eye, Grid, List } from 'lucide-react';
 
 // Rate limiting for clicks
 const rateLimitClicks = () => {
@@ -730,7 +730,7 @@ function LegalStreamingDirectory() {
                 }`}
                 title="Grid view"
               >
-                <Grid3X3 className="h-4 w-4" />
+                <Grid className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setViewMode('list')}
