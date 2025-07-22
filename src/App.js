@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Filter, ExternalLink, Calendar, Gavel, Play, Bookmark, TrendingUp, Eye, Grid, List } from 'lucide-react';
+import { Search, Filter, ExternalLink, Calendar, Gavel, Play, Bookmark, TrendingUp, Eye, Grid, List, Plus, Edit, Save, X, Trash2 } from 'lucide-react';
 
 // Rate limiting for clicks
 const rateLimitClicks = () => {
@@ -10,6 +10,23 @@ const rateLimitClicks = () => {
   }
   localStorage.setItem('lastClick', now);
   return true;
+};
+
+// Admin password - change this to your preferred password
+const ADMIN_PASSWORD = "lawyou2025";
+
+// Utility functions for localStorage management
+const saveContentToStorage = (content) => {
+  localStorage.setItem('legalContent', JSON.stringify(content));
+};
+
+const loadContentFromStorage = () => {
+  const saved = localStorage.getItem('legalContent');
+  return saved ? JSON.parse(saved) : legalContentDatabase;
+};
+
+const getNextId = (content) => {
+  return Math.max(...content.map(item => item.id)) + 1;
 };
 
 // Sample comprehensive database with real legal content
@@ -32,7 +49,8 @@ const legalContentDatabase = [
     streamingUrl: "https://www.netflix.com/title/81303831",
     platformUrl: "https://www.netflix.com",
     hasAnalysis: true,
-    analysisUrl: "https://lawyouamerica.com/pop-court/the-lincoln-lawyer"
+    analysisUrl: "https://lawyouamerica.com/pop-court/the-lincoln-lawyer",
+    imdbUrl: "https://www.imdb.com/title/tt1905885/" // Admin reference only
   },
   {
     id: 2,
@@ -52,7 +70,8 @@ const legalContentDatabase = [
     streamingUrl: "https://www.netflix.com/title/70195800",
     platformUrl: "https://www.netflix.com",
     hasAnalysis: false,
-    analysisUrl: null
+    analysisUrl: null,
+    imdbUrl: "https://www.imdb.com/title/tt1632701/"
   },
   {
     id: 3,
@@ -72,7 +91,8 @@ const legalContentDatabase = [
     streamingUrl: "https://www.netflix.com/title/80021955",
     platformUrl: "https://www.netflix.com",
     hasAnalysis: false,
-    analysisUrl: null
+    analysisUrl: null,
+    imdbUrl: "https://www.imdb.com/title/tt3110726/"
   },
   {
     id: 4,
@@ -92,7 +112,8 @@ const legalContentDatabase = [
     streamingUrl: "https://www.amazon.com/The-Good-Wife-Season-1/dp/B0064MGU98",
     platformUrl: "https://www.amazon.com/gp/video/storefront",
     hasAnalysis: false,
-    analysisUrl: null
+    analysisUrl: null,
+    imdbUrl: "https://www.imdb.com/title/tt1442462/"
   },
   {
     id: 5,
@@ -112,7 +133,8 @@ const legalContentDatabase = [
     streamingUrl: "https://www.amazon.com/Silk-Season-1/dp/B00ESB68HQ",
     platformUrl: "https://www.amazon.com",
     hasAnalysis: false,
-    analysisUrl: null
+    analysisUrl: null,
+    imdbUrl: "https://www.imdb.com/title/tt1717157/"
   },
   {
     id: 6,
@@ -132,7 +154,8 @@ const legalContentDatabase = [
     streamingUrl: "https://www.amazon.com/The-Split-Season-1/dp/B07D21MHBW",
     platformUrl: "https://www.amazon.com",
     hasAnalysis: false,
-    analysisUrl: null
+    analysisUrl: null,
+    imdbUrl: "https://www.imdb.com/title/tt7631058/"
   },
   {
     id: 7,
@@ -152,7 +175,8 @@ const legalContentDatabase = [
     streamingUrl: "https://www.amazon.com/Goliath-Season-1/dp/B0875SSWFS",
     platformUrl: "https://www.amazon.com",
     hasAnalysis: false,
-    analysisUrl: null
+    analysisUrl: null,
+    imdbUrl: "https://www.imdb.com/title/tt4687880/"
   },
   {
     id: 8,
@@ -172,7 +196,8 @@ const legalContentDatabase = [
     streamingUrl: "https://www.hulu.com/series/boston-legal-2cd2fbc0-6cc2-49d8-a78b-bcd661482db6",
     platformUrl: "https://www.hulu.com",
     hasAnalysis: false,
-    analysisUrl: null
+    analysisUrl: null,
+    imdbUrl: "https://www.imdb.com/title/tt0402711/"
   },
   {
     id: 9,
@@ -192,7 +217,8 @@ const legalContentDatabase = [
     streamingUrl: "https://www.hulu.com/series/ally-mcbeal-be5f7f99-ad45-40af-986b-550654fb6f52",
     platformUrl: "https://www.hulu.com",
     hasAnalysis: false,
-    analysisUrl: null
+    analysisUrl: null,
+    imdbUrl: "https://www.imdb.com/title/tt0118254/"
   },
   {
     id: 10,
@@ -212,7 +238,8 @@ const legalContentDatabase = [
     streamingUrl: "https://tv.apple.com/us/movie/the-verdict/umc.cmc.1ur632crpht2qe010rai5iw7d",
     platformUrl: "https://tv.apple.com/",
     hasAnalysis: false,
-    analysisUrl: null
+    analysisUrl: null,
+    imdbUrl: "https://www.imdb.com/title/tt0084855/"
   },
   {
     id: 11,
@@ -232,7 +259,8 @@ const legalContentDatabase = [
     streamingUrl: "https://pluto.tv/us/on-demand/series/68228748a21058b98fed9a36/season/1?utm_medium=textsearch&utm_source=google",
     platformUrl: "https://pluto.tv/",
     hasAnalysis: false,
-    analysisUrl: null
+    analysisUrl: null,
+    imdbUrl: "https://www.imdb.com/title/tt1587000/"
   },
   {
     id: 12,
@@ -252,7 +280,8 @@ const legalContentDatabase = [
     streamingUrl: "https://www.netflix.com/title/81684531",
     platformUrl: "https://www.netflix.com/",
     hasAnalysis: false,
-    analysisUrl: null
+    analysisUrl: null,
+    imdbUrl: "https://www.imdb.com/title/tt10844478/"
   },
   {
     id: 13,
@@ -272,7 +301,8 @@ const legalContentDatabase = [
     streamingUrl: "https://www.cwtv.com/shows/family-law/",
     platformUrl: "https://www.cwtv.com/",
     hasAnalysis: false,
-    analysisUrl: null
+    analysisUrl: null,
+    imdbUrl: "https://www.imdb.com/title/tt13991232/"
   },
   {
     id: 14,
@@ -292,7 +322,8 @@ const legalContentDatabase = [
     streamingUrl: "https://pluto.tv/us/search/details/movies/64c013550a21a300132add4a?utm_medium=textsearch&utm_source=google",
     platformUrl: "https://www.pluto.tv/",
     hasAnalysis: false,
-    analysisUrl: null
+    analysisUrl: null,
+    imdbUrl: "https://www.imdb.com/title/tt0104257/"
   },
   {
     id: 15,
@@ -312,7 +343,8 @@ const legalContentDatabase = [
     streamingUrl: "https://www.netflix.com/title/80200549",
     platformUrl: "https://www.netflix.com/",
     hasAnalysis: false,
-    analysisUrl: null
+    analysisUrl: null,
+    imdbUrl: "https://www.imdb.com/title/tt7137906/"
   },
   {
     id: 16,
@@ -332,7 +364,8 @@ const legalContentDatabase = [
     streamingUrl: "https://www.hulu.com/movie/anatomy-of-a-fall-94f53938-6240-42b4-abef-8be1d1c39d72",
     platformUrl: "https://www.hulu.com/",
     hasAnalysis: true,
-    analysisUrl: "https://lawyouamerica.com/anatomy-of-a-fall/"
+    analysisUrl: "https://lawyouamerica.com/anatomy-of-a-fall/",
+    imdbUrl: "https://www.imdb.com/title/tt17009710/"
   },
   {
     id: 17,
@@ -341,6 +374,42 @@ const legalContentDatabase = [
     year: 1962,
     subgenres: ["Criminal"],
     platform: "Amazon",
+    currentlyAvailable: true,
+    validityVerdict: 2,
+    synopsis: "A man is arrested and stands trial, but he is never made aware of the charges against him.",
+    director: "Orson Welles",
+    seasons: null,
+    trending: false,
+    international: false,
+    historicalAvailability: null,
+    streamingUrl: "https://www.amazon.com/Trial-Jess-Hahn/dp/B0CC7SFQJW",
+    platformUrl: "https://www.amazon.com/",
+    hasAnalysis: true,
+    analysisUrl: "https://lawyouamerica.com/the-trial-by-kafka/",
+    imdbUrl: "https://www.imdb.com/title/tt0057427/"
+  },
+  {
+    id: 18,
+    title: "Marshall",
+    type: "Movie",
+    year: 2017,
+    subgenres: ["Criminal"],
+    platform: "HBO Max",
+    currentlyAvailable: true,
+    validityVerdict: 3,
+    synopsis: "Thurgood Marshall, who would become the first African-American Supreme Court Justice, battles through one of his career-defining cases.",
+    director: "Reginald Hudlin",
+    seasons: null,
+    trending: false,
+    international: false,
+    historicalAvailability: null,
+    streamingUrl: "https://www.hbomax.com/movies/marshall/efca3fd1-0400-480b-896e-031fe850e02e",
+    platformUrl: "https://www.hbomax.com/",
+    hasAnalysis: true,
+    analysisUrl: "https://lawyouamerica.com/marshall-movie/",
+    imdbUrl: "https://www.imdb.com/title/tt1504320/"
+  }
+];
     currentlyAvailable: true,
     validityVerdict: 2,
     synopsis: "A man is arrested and stands trial, but he is never made aware of the charges against him.",
@@ -396,7 +465,7 @@ function LegalStreamingDirectory() {
 
   // Filter and search logic
   const filteredContent = useMemo(() => {
-    let filtered = legalContentDatabase.filter(item => {
+    let filtered = contentData.filter(item => {
       const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           item.synopsis.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           item.director.toLowerCase().includes(searchTerm.toLowerCase());
@@ -433,10 +502,96 @@ function LegalStreamingDirectory() {
     });
 
     return filtered;
-  }, [searchTerm, selectedPlatform, selectedSubgenre, selectedType, sortBy]);
+  }, [searchTerm, selectedPlatform, selectedSubgenre, selectedType, sortBy, contentData]);
 
-  const trendingCount = legalContentDatabase.filter(item => item.trending).length;
-  const internationalCount = legalContentDatabase.filter(item => item.international).length;
+  const trendingCount = contentData.filter(item => item.trending).length;
+  const internationalCount = contentData.filter(item => item.international).length;
+
+  // Admin functions
+  const handleAdminLogin = () => {
+    if (adminPassword === ADMIN_PASSWORD) {
+      setIsAdminMode(true);
+      setShowLogin(false);
+      setAdminPassword('');
+    } else {
+      alert('Incorrect password');
+    }
+  };
+
+  const handleAdminLogout = () => {
+    setIsAdminMode(false);
+    setShowAddForm(false);
+    setEditingItem(null);
+  };
+
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      type: 'TV Series',
+      year: new Date().getFullYear(),
+      subgenres: [],
+      platform: 'Netflix',
+      currentlyAvailable: true,
+      validityVerdict: 2,
+      synopsis: '',
+      director: '',
+      seasons: null,
+      trending: false,
+      international: false,
+      historicalAvailability: [],
+      streamingUrl: '',
+      platformUrl: '',
+      hasAnalysis: false,
+      analysisUrl: '',
+      imdbUrl: ''
+    });
+  };
+
+  const handleAddContent = () => {
+    const newContent = {
+      ...formData,
+      id: getNextId(contentData),
+      historicalAvailability: formData.historicalAvailability.filter(h => h.trim())
+    };
+    
+    const updatedContent = [...contentData, newContent];
+    setContentData(updatedContent);
+    saveContentToStorage(updatedContent);
+    setShowAddForm(false);
+    resetForm();
+  };
+
+  const handleEditContent = (item) => {
+    setEditingItem(item.id);
+    setFormData(item);
+    setShowAddForm(true);
+  };
+
+  const handleUpdateContent = () => {
+    const updatedContent = contentData.map(item => 
+      item.id === editingItem ? { ...formData, id: editingItem } : item
+    );
+    setContentData(updatedContent);
+    saveContentToStorage(updatedContent);
+    setShowAddForm(false);
+    setEditingItem(null);
+    resetForm();
+  };
+
+  const handleDeleteContent = (id) => {
+    if (window.confirm('Are you sure you want to delete this item?')) {
+      const updatedContent = contentData.filter(item => item.id !== id);
+      setContentData(updatedContent);
+      saveContentToStorage(updatedContent);
+    }
+  };
+
+  const handleSubgenreChange = (subgenre) => {
+    const newSubgenres = formData.subgenres.includes(subgenre)
+      ? formData.subgenres.filter(s => s !== subgenre)
+      : [...formData.subgenres, subgenre];
+    setFormData({ ...formData, subgenres: newSubgenres });
+  };
 
   const getPlatformColor = (platform) => {
     const colors = {
@@ -455,7 +610,256 @@ function LegalStreamingDirectory() {
     return colors[platform] || 'bg-gray-500';
   };
 
-  const ValidityVerdict = ({ rating }) => {
+  const AdminForm = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-screen overflow-y-auto">
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">
+              {editingItem ? 'Edit Content' : 'Add New Content'}
+            </h2>
+            <button
+              onClick={() => {
+                setShowAddForm(false);
+                setEditingItem(null);
+                resetForm();
+              }}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Type *</label>
+                <select
+                  value={formData.type}
+                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="TV Series">TV Series</option>
+                  <option value="Movie">Movie</option>
+                  <option value="Limited Series">Limited Series</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Year *</label>
+                <input
+                  type="number"
+                  value={formData.year}
+                  onChange={(e) => setFormData({ ...formData, year: parseInt(e.target.value) })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  min="1900"
+                  max="2030"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Director</label>
+                <input
+                  type="text"
+                  value={formData.director}
+                  onChange={(e) => setFormData({ ...formData, director: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Legal Specialties</label>
+              <div className="flex flex-wrap gap-2">
+                {['Criminal', 'Civil', 'Corporate', 'Family'].map(specialty => (
+                  <label key={specialty} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={formData.subgenres.includes(specialty)}
+                      onChange={() => handleSubgenreChange(specialty)}
+                      className="mr-2"
+                    />
+                    {specialty}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Platform *</label>
+                <select
+                  value={formData.platform}
+                  onChange={(e) => setFormData({ ...formData, platform: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  {platforms.slice(1).map(platform => (
+                    <option key={platform} value={platform}>{platform}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Validity Verdict (1-3 gavels)</label>
+                <select
+                  value={formData.validityVerdict}
+                  onChange={(e) => setFormData({ ...formData, validityVerdict: parseInt(e.target.value) })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value={1}>1 Gavel (Low Accuracy)</option>
+                  <option value={2}>2 Gavels (Medium Accuracy)</option>
+                  <option value={3}>3 Gavels (High Accuracy)</option>
+                </select>
+              </div>
+            </div>
+
+            {formData.type !== 'Movie' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Number of Seasons</label>
+                <input
+                  type="number"
+                  value={formData.seasons || ''}
+                  onChange={(e) => setFormData({ ...formData, seasons: e.target.value ? parseInt(e.target.value) : null })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  min="1"
+                />
+              </div>
+            )}
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Synopsis *</label>
+              <textarea
+                value={formData.synopsis}
+                onChange={(e) => setFormData({ ...formData, synopsis: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                rows="3"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Streaming URL</label>
+              <input
+                type="url"
+                value={formData.streamingUrl}
+                onChange={(e) => setFormData({ ...formData, streamingUrl: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="https://..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Platform URL</label>
+              <input
+                type="url"
+                value={formData.platformUrl}
+                onChange={(e) => setFormData({ ...formData, platformUrl: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="https://..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">IMDB URL (Admin Reference)</label>
+              <div className="flex">
+                <input
+                  type="url"
+                  value={formData.imdbUrl}
+                  onChange={(e) => setFormData({ ...formData, imdbUrl: e.target.value })}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  placeholder="https://www.imdb.com/title/..."
+                />
+                {formData.imdbUrl && (
+                  <button
+                    type="button"
+                    onClick={() => window.open(formData.imdbUrl, '_blank')}
+                    className="px-3 py-2 bg-yellow-500 text-white rounded-r-md hover:bg-yellow-600"
+                    title="Open IMDB page"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-4">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={formData.hasAnalysis}
+                  onChange={(e) => setFormData({ ...formData, hasAnalysis: e.target.checked })}
+                  className="mr-2"
+                />
+                Has LawYou Analysis
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={formData.trending}
+                  onChange={(e) => setFormData({ ...formData, trending: e.target.checked })}
+                  className="mr-2"
+                />
+                Trending
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={formData.international}
+                  onChange={(e) => setFormData({ ...formData, international: e.target.checked })}
+                  className="mr-2"
+                />
+                International
+              </label>
+            </div>
+
+            {formData.hasAnalysis && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Analysis URL</label>
+                <input
+                  type="url"
+                  value={formData.analysisUrl}
+                  onChange={(e) => setFormData({ ...formData, analysisUrl: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  placeholder="https://lawyouamerica.com/..."
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="flex justify-end space-x-3 mt-6 pt-4 border-t">
+            <button
+              onClick={() => {
+                setShowAddForm(false);
+                setEditingItem(null);
+                resetForm();
+              }}
+              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={editingItem ? handleUpdateContent : handleAddContent}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 flex items-center"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              {editingItem ? 'Update' : 'Add'} Content
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
     const gavels = [];
     for (let i = 1; i <= 3; i++) {
       gavels.push(
@@ -474,6 +878,34 @@ function LegalStreamingDirectory() {
 
   const ContentCard = ({ item }) => (
     <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+      {isAdminMode && (
+        <div className="flex justify-end space-x-2 mb-3">
+          <button
+            onClick={() => handleEditContent(item)}
+            className="text-blue-600 hover:text-blue-800 p-1"
+            title="Edit"
+          >
+            <Edit className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => handleDeleteContent(item.id)}
+            className="text-red-600 hover:text-red-800 p-1"
+            title="Delete"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+          {item.imdbUrl && (
+            <button
+              onClick={() => window.open(item.imdbUrl, '_blank')}
+              className="text-yellow-600 hover:text-yellow-800 p-1"
+              title="View on IMDB"
+            >
+              <ExternalLink className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+      )}
+      
       <div className="flex justify-between items-start mb-3">
         <div>
           <h3 className="text-xl font-bold text-gray-900 mb-1">{item.title}</h3>
@@ -483,6 +915,88 @@ function LegalStreamingDirectory() {
             {item.hasAnalysis ? (
               <button 
                 className="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded text-xs font-medium flex items-center"
+                onClick={() => {
+                  if (!rateLimitClicks()) return;
+                  window.open(item.analysisUrl, '_blank');
+                }}
+                title="Read our analysis"
+              >
+                <ExternalLink className="w-3 h-3 mr-1" />
+                LawYou's Take
+              </button>
+            ) : (
+              <button 
+                className="bg-gray-300 text-gray-500 px-2 py-1 rounded text-xs font-medium flex items-center cursor-not-allowed"
+                disabled
+                title="Analysis coming soon"
+              >
+                <ExternalLink className="w-3 h-3 mr-1" />
+                LawYou's Take
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center space-x-2">
+          {item.trending && <TrendingUp className="w-4 h-4 text-orange-500" title="Trending" />}
+          {item.international && <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">International</span>}
+        </div>
+      </div>
+
+      <div className="mb-3">
+        <div className="flex flex-wrap gap-2">
+          {item.subgenres.map(subgenre => (
+            <span key={subgenre} className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">
+              {subgenre}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <p className="text-gray-700 text-sm mb-4 line-clamp-3">{item.synopsis}</p>
+
+      {/* LawYou's Validity Verdict - same font and size as synopsis */}
+      <p className="text-gray-700 text-sm mb-4">
+        <span className="font-medium">LawYou's Validity Verdict: </span>
+        <span className="inline-flex items-center ml-1">
+          <ValidityVerdict rating={item.validityVerdict} />
+        </span>
+      </p>
+
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          {item.seasons && (
+            <span className="text-sm text-gray-600">{item.seasons} Season{item.seasons !== 1 ? 's' : ''}</span>
+          )}
+        </div>
+        
+        <div className="flex space-x-2">
+          <button 
+            className={`hover:opacity-90 text-white px-4 py-2 rounded text-sm font-medium flex items-center ${getPlatformColor(item.platform)}`}
+            onClick={() => {
+              if (!rateLimitClicks()) return;
+              
+              if (item.streamingUrl) {
+                window.open(item.streamingUrl, '_blank');
+              } else {
+                window.open(item.platformUrl, '_blank');
+              }
+            }}
+          >
+            <Play className="w-4 h-4 mr-1" />
+            {item.platform}
+          </button>
+        </div>
+      </div>
+
+      {!item.currentlyAvailable && item.historicalAvailability && item.historicalAvailability.length > 0 && (
+        <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
+          <p className="text-sm text-yellow-800">
+            <strong>Previously available:</strong> {item.historicalAvailability.join(', ')}
+          </p>
+        </div>
+      )}
+    </div>
+  );text-white px-2 py-1 rounded text-xs font-medium flex items-center"
                 onClick={() => {
                   if (!rateLimitClicks()) return;
                   window.open(item.analysisUrl, '_blank');
@@ -653,9 +1167,75 @@ function LegalStreamingDirectory() {
               <h1 className="text-3xl font-bold text-gray-900">Legal Streaming Directory</h1>
               <p className="text-gray-600 mt-1">Your comprehensive guide to legal dramas, comedies, and documentaries</p>
             </div>
+            
+            {/* Admin Controls */}
+            <div className="mt-4 sm:mt-0 flex items-center space-x-3">
+              {isAdminMode ? (
+                <>
+                  <button
+                    onClick={() => setShowAddForm(true)}
+                    className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Content
+                  </button>
+                  <button
+                    onClick={handleAdminLogout}
+                    className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                  >
+                    Logout
+                  </button>
+                  <span className="text-sm text-gray-600">Admin Mode</span>
+                </>
+              ) : (
+                <button
+                  onClick={() => setShowLogin(true)}
+                  className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Admin
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </header>
+
+      {/* Admin Login Modal */}
+      {showLogin && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Admin Login</h2>
+            <input
+              type="password"
+              placeholder="Enter admin password"
+              value={adminPassword}
+              onChange={(e) => setAdminPassword(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleAdminLogin()}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4"
+            />
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => {
+                  setShowLogin(false);
+                  setAdminPassword('');
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAdminLogin}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+              >
+                Login
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Admin Form */}
+      {showAddForm && <AdminForm />}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="bg-white rounded-lg shadow p-6">
@@ -785,6 +1365,7 @@ function LegalStreamingDirectory() {
               <p className="text-gray-600">
                 Showing {filteredContent.length} result{filteredContent.length !== 1 ? 's' : ''}
                 {searchTerm && ` for "${searchTerm}"`}
+                {isAdminMode && <span className="ml-2 text-indigo-600 font-medium">(Admin Mode Active)</span>}
               </p>
               <div className="text-sm text-gray-500">
                 {viewMode === 'grid' ? 'Grid View' : 'List View'}
