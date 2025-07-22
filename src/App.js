@@ -410,40 +410,6 @@ const legalContentDatabase = [
     imdbUrl: "https://www.imdb.com/title/tt1504320/"
   }
 ];
-    currentlyAvailable: true,
-    validityVerdict: 2,
-    synopsis: "A man is arrested and stands trial, but he is never made aware of the charges against him.",
-    director: "Orson Welles",
-    seasons: null,
-    trending: false,
-    international: false,
-    historicalAvailability: null,
-    streamingUrl: "https://www.amazon.com/Trial-Jess-Hahn/dp/B0CC7SFQJW",
-    platformUrl: "https://www.amazon.com/",
-    hasAnalysis: true,
-    analysisUrl: "https://lawyouamerica.com/the-trial-by-kafka/"
-  },
-  {
-    id: 18,
-    title: "Marshall",
-    type: "Movie",
-    year: 2017,
-    subgenres: ["Criminal"],
-    platform: "HBO Max",
-    currentlyAvailable: true,
-    validityVerdict: 3,
-    synopsis: "Thurgood Marshall, who would become the first African-American Supreme Court Justice, battles through one of his career-defining cases.",
-    director: "Reginald Hudlin",
-    seasons: null,
-    trending: false,
-    international: false,
-    historicalAvailability: null,
-    streamingUrl: "https://www.hbomax.com/movies/marshall/efca3fd1-0400-480b-896e-031fe850e02e",
-    platformUrl: "https://www.hbomax.com/",
-    hasAnalysis: true,
-    analysisUrl: "https://lawyouamerica.com/marshall-movie/"
-  }
-];
 
 const platforms = [
   'All Platforms', 'Netflix', 'Amazon Prime', 'Hulu', 'HBO Max', 
