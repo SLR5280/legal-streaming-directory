@@ -360,7 +360,9 @@ const legalContentDatabase = [
     hasAnalysis: true,
     analysisUrl: "https://lawyouamerica.com/marshall-movie/"
   },
-];import React, { useState, useEffect, useMemo } from 'react';
+];
+
+import React, { useState, useEffect, useMemo } from 'react';
 import { Search, Filter, ExternalLink, Calendar, Gavel, Play, Bookmark, TrendingUp, Eye, Grid, List } from 'lucide-react';
 
 // Rate limiting for clicks
