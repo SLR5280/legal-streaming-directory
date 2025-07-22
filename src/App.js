@@ -391,8 +391,7 @@ function LegalStreamingDirectory() {
   const [selectedSubgenre, setSelectedSubgenre] = useState('All Subgenres');
   const [selectedType, setSelectedType] = useState('All Types');
   const [sortBy, setSortBy] = useState('title-asc');
-  const [showFilters, setShowFilters] = useState(false);
-  const [currentView, setCurrentView] = useState('all');
+  const [showFilters, setShowFilters] = useState(true); // Changed to true (visible by default)
   const [viewMode, setViewMode] = useState('grid');
 
   // Filter and search logic
@@ -409,12 +408,8 @@ function LegalStreamingDirectory() {
                             item.subgenres.includes(selectedSubgenre);
       
       const matchesType = selectedType === 'All Types' || item.type === selectedType;
-
-      const matchesView = currentView === 'all' || 
-                         (currentView === 'trending' && item.trending) ||
-                         (currentView === 'international' && item.international);
       
-      return matchesSearch && matchesPlatform && matchesSubgenre && matchesType && matchesView;
+      return matchesSearch && matchesPlatform && matchesSubgenre && matchesType;
     });
 
     // Apply sorting
@@ -438,7 +433,7 @@ function LegalStreamingDirectory() {
     });
 
     return filtered;
-  }, [searchTerm, selectedPlatform, selectedSubgenre, selectedType, currentView, sortBy]);
+  }, [searchTerm, selectedPlatform, selectedSubgenre, selectedType, sortBy]);
 
   const trendingCount = legalContentDatabase.filter(item => item.trending).length;
   const internationalCount = legalContentDatabase.filter(item => item.international).length;
@@ -482,16 +477,37 @@ function LegalStreamingDirectory() {
       <div className="flex justify-between items-start mb-3">
         <div>
           <h3 className="text-xl font-bold text-gray-900 mb-1">{item.title}</h3>
-          <p className="text-sm text-gray-600">{item.type} • {item.year}</p>
+          <div className="flex items-center space-x-3">
+            <p className="text-sm text-gray-600">{item.type} • {item.year}</p>
+            {/* LawYou's Take button moved here */}
+            {item.hasAnalysis ? (
+              <button 
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded text-xs font-medium flex items-center"
+                onClick={() => {
+                  if (!rateLimitClicks()) return;
+                  window.open(item.analysisUrl, '_blank');
+                }}
+                title="Read our analysis"
+              >
+                <ExternalLink className="w-3 h-3 mr-1" />
+                LawYou's Take
+              </button>
+            ) : (
+              <button 
+                className="bg-gray-300 text-gray-500 px-2 py-1 rounded text-xs font-medium flex items-center cursor-not-allowed"
+                disabled
+                title="Analysis coming soon"
+              >
+                <ExternalLink className="w-3 h-3 mr-1" />
+                LawYou's Take
+              </button>
+            )}
+          </div>
         </div>
         <div className="flex items-center space-x-2">
           {item.trending && <TrendingUp className="w-4 h-4 text-orange-500" title="Trending" />}
           {item.international && <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">International</span>}
         </div>
-      </div>
-
-      <div className={`inline-block px-3 py-1 rounded-full text-white text-sm font-medium mb-3 ${getPlatformColor(item.platform)}`}>
-        {item.platform}
       </div>
 
       <div className="mb-3">
@@ -506,12 +522,16 @@ function LegalStreamingDirectory() {
 
       <p className="text-gray-700 text-sm mb-4 line-clamp-3">{item.synopsis}</p>
 
+      {/* LawYou's Validity Verdict - same font and size as synopsis */}
+      <p className="text-gray-700 text-sm mb-4">
+        <span className="font-medium">LawYou's Validity Verdict: </span>
+        <span className="inline-flex items-center ml-1">
+          <ValidityVerdict rating={item.validityVerdict} />
+        </span>
+      </p>
+
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <div className="flex items-center">
-            <span className="text-xs font-medium text-gray-600 mr-2">Validity Verdict:</span>
-            <ValidityVerdict rating={item.validityVerdict} />
-          </div>
           {item.seasons && (
             <span className="text-sm text-gray-600">{item.seasons} Season{item.seasons !== 1 ? 's' : ''}</span>
           )}
@@ -533,27 +553,6 @@ function LegalStreamingDirectory() {
             <Play className="w-4 h-4 mr-1" />
             {item.platform}
           </button>
-          
-          {item.hasAnalysis ? (
-            <button 
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded text-sm font-medium flex items-center"
-              onClick={() => {
-                if (!rateLimitClicks()) return;
-                window.open(item.analysisUrl, '_blank');
-              }}
-              title="Read our analysis"
-            >
-              <ExternalLink className="w-4 h-4" />
-            </button>
-          ) : (
-            <button 
-              className="bg-gray-300 text-gray-500 px-3 py-2 rounded text-sm font-medium flex items-center cursor-not-allowed"
-              disabled
-              title="Analysis coming soon"
-            >
-              <ExternalLink className="w-4 h-4" />
-            </button>
-          )}
         </div>
       </div>
 
@@ -575,17 +574,33 @@ function LegalStreamingDirectory() {
             <div className="flex items-center space-x-3 mb-2">
               <h3 className="text-lg font-bold text-gray-900 truncate">{item.title}</h3>
               <span className="text-sm text-gray-500">({item.year})</span>
+              {/* LawYou's Take button moved here */}
+              {item.hasAnalysis ? (
+                <button 
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded text-xs font-medium flex items-center"
+                  onClick={() => {
+                    if (!rateLimitClicks()) return;
+                    window.open(item.analysisUrl, '_blank');
+                  }}
+                  title="Read our analysis"
+                >
+                  <ExternalLink className="w-3 h-3 mr-1" />
+                  LawYou's Take
+                </button>
+              ) : (
+                <button 
+                  className="bg-gray-300 text-gray-500 px-2 py-1 rounded text-xs font-medium flex items-center cursor-not-allowed"
+                  disabled
+                  title="Analysis coming soon"
+                >
+                  <ExternalLink className="w-3 h-3 mr-1" />
+                  LawYou's Take
+                </button>
+              )}
               {item.trending && <TrendingUp className="w-4 h-4 text-orange-500" title="Trending" />}
               {item.international && <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">International</span>}
             </div>
             <div className="flex items-center space-x-4 mb-2">
-              <div className={`px-2 py-1 rounded text-white text-xs font-medium ${getPlatformColor(item.platform)}`}>
-                {item.platform}
-              </div>
-              <div className="flex items-center">
-                <span className="text-xs text-gray-600 mr-2">Validity:</span>
-                <ValidityVerdict rating={item.validityVerdict} />
-              </div>
               {item.seasons && (
                 <span className="text-sm text-gray-600">{item.seasons} Season{item.seasons !== 1 ? 's' : ''}</span>
               )}
@@ -597,7 +612,14 @@ function LegalStreamingDirectory() {
                 </span>
               ))}
             </div>
-            <p className="text-gray-600 text-sm line-clamp-2">{item.synopsis}</p>
+            <p className="text-gray-600 text-sm line-clamp-2 mb-2">{item.synopsis}</p>
+            {/* LawYou's Validity Verdict - same font and size as synopsis */}
+            <p className="text-gray-600 text-sm">
+              <span className="font-medium">LawYou's Validity Verdict: </span>
+              <span className="inline-flex items-center ml-1">
+                <ValidityVerdict rating={item.validityVerdict} />
+              </span>
+            </p>
           </div>
         </div>
         
@@ -617,27 +639,6 @@ function LegalStreamingDirectory() {
             <Play className="w-4 h-4 mr-1" />
             {item.platform}
           </button>
-          
-          {item.hasAnalysis ? (
-            <button 
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-2 rounded text-sm font-medium flex items-center"
-              onClick={() => {
-                if (!rateLimitClicks()) return;
-                window.open(item.analysisUrl, '_blank');
-              }}
-              title="Read our analysis"
-            >
-              <ExternalLink className="w-4 h-4" />
-            </button>
-          ) : (
-            <button 
-              className="bg-gray-300 text-gray-500 px-2 py-2 rounded text-sm font-medium flex items-center cursor-not-allowed"
-              disabled
-              title="Analysis coming soon"
-            >
-              <ExternalLink className="w-4 h-4" />
-            </button>
-          )}
         </div>
       </div>
     </div>
@@ -655,44 +656,6 @@ function LegalStreamingDirectory() {
           </div>
         </div>
       </header>
-
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-8 overflow-x-auto">
-            <button
-              onClick={() => setCurrentView('all')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
-                currentView === 'all' 
-                  ? 'border-indigo-500 text-indigo-600' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              All Content ({legalContentDatabase.length})
-            </button>
-            <button
-              onClick={() => setCurrentView('trending')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap flex items-center ${
-                currentView === 'trending' 
-                  ? 'border-indigo-500 text-indigo-600' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              <TrendingUp className="w-4 h-4 mr-1" />
-              Trending ({trendingCount})
-            </button>
-            <button
-              onClick={() => setCurrentView('international')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
-                currentView === 'international' 
-                  ? 'border-indigo-500 text-indigo-600' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              International ({internationalCount})
-            </button>
-          </div>
-        </div>
-      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="bg-white rounded-lg shadow p-6">
@@ -717,10 +680,10 @@ function LegalStreamingDirectory() {
             
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${showFilters ? 'bg-gray-100' : ''}`}
             >
               <Filter className="h-4 w-4 mr-2" />
-              Filters
+              {showFilters ? 'Hide Filters' : 'Show Filters'}
             </button>
 
             <div className="flex rounded-md shadow-sm">
