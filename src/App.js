@@ -426,8 +426,38 @@ function LegalStreamingDirectory() {
   const [selectedSubgenre, setSelectedSubgenre] = useState('All Subgenres');
   const [selectedType, setSelectedType] = useState('All Types');
   const [sortBy, setSortBy] = useState('title-asc');
-  const [showFilters, setShowFilters] = useState(true); // Changed to true (visible by default)
+  const [showFilters, setShowFilters] = useState(true);
   const [viewMode, setViewMode] = useState('grid');
+  
+  // Admin panel state
+  const [isAdminMode, setIsAdminMode] = useState(false);
+  const [adminPassword, setAdminPassword] = useState('');
+  const [showLogin, setShowLogin] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
+  const [contentData, setContentData] = useState(() => loadContentFromStorage());
+
+  // Form state for adding/editing content
+  const [formData, setFormData] = useState({
+    title: '',
+    type: 'TV Series',
+    year: new Date().getFullYear(),
+    subgenres: [],
+    platform: 'Netflix',
+    currentlyAvailable: true,
+    validityVerdict: 2,
+    synopsis: '',
+    director: '',
+    seasons: null,
+    trending: false,
+    international: false,
+    historicalAvailability: [],
+    streamingUrl: '',
+    platformUrl: '',
+    hasAnalysis: false,
+    analysisUrl: '',
+    imdbUrl: ''
+  });
 
   // Filter and search logic
   const filteredContent = useMemo(() => {
@@ -826,6 +856,8 @@ function LegalStreamingDirectory() {
       </div>
     </div>
   );
+
+  const ValidityVerdict = ({ rating }) => {
     const gavels = [];
     for (let i = 1; i <= 3; i++) {
       gavels.push(
@@ -877,7 +909,6 @@ function LegalStreamingDirectory() {
           <h3 className="text-xl font-bold text-gray-900 mb-1">{item.title}</h3>
           <div className="flex items-center space-x-3">
             <p className="text-sm text-gray-600">{item.type} • {item.year}</p>
-            {/* LawYou's Take button moved here */}
             {item.hasAnalysis ? (
               <button 
                 className="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded text-xs font-medium flex items-center"
@@ -920,89 +951,6 @@ function LegalStreamingDirectory() {
 
       <p className="text-gray-700 text-sm mb-4 line-clamp-3">{item.synopsis}</p>
 
-      {/* LawYou's Validity Verdict - same font and size as synopsis */}
-      <p className="text-gray-700 text-sm mb-4">
-        <span className="font-medium">LawYou's Validity Verdict: </span>
-        <span className="inline-flex items-center ml-1">
-          <ValidityVerdict rating={item.validityVerdict} />
-        </span>
-      </p>
-
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          {item.seasons && (
-            <span className="text-sm text-gray-600">{item.seasons} Season{item.seasons !== 1 ? 's' : ''}</span>
-          )}
-        </div>
-        
-        <div className="flex space-x-2">
-          <button 
-            className={`hover:opacity-90 text-white px-4 py-2 rounded text-sm font-medium flex items-center ${getPlatformColor(item.platform)}`}
-            onClick={() => {
-              if (!rateLimitClicks()) return;
-              
-              if (item.streamingUrl) {
-                window.open(item.streamingUrl, '_blank');
-              } else {
-                window.open(item.platformUrl, '_blank');
-              }
-            }}
-          >
-            <Play className="w-4 h-4 mr-1" />
-            {item.platform}
-          </button>
-        </div>
-      </div>
-
-      {!item.currentlyAvailable && item.historicalAvailability && item.historicalAvailability.length > 0 && (
-        <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
-          <p className="text-sm text-yellow-800">
-            <strong>Previously available:</strong> {item.historicalAvailability.join(', ')}
-          </p>
-        </div>
-      )}
-    </div>
-  className="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded text-xs font-medium flex items-center"
-                onClick={() => {
-                  if (!rateLimitClicks()) return;
-                  window.open(item.analysisUrl, '_blank');
-                }}
-                title="Read our analysis"
-              >
-                <ExternalLink className="w-3 h-3 mr-1" />
-                LawYou's Take
-              </button>
-            ) : (
-              <button 
-                className="bg-gray-300 text-gray-500 px-2 py-1 rounded text-xs font-medium flex items-center cursor-not-allowed"
-                disabled
-                title="Analysis coming soon"
-              >
-                <ExternalLink className="w-3 h-3 mr-1" />
-                LawYou's Take
-              </button>
-            )}
-          </div>
-        </div>
-        <div className="flex items-center space-x-2">
-          {item.trending && <TrendingUp className="w-4 h-4 text-orange-500" title="Trending" />}
-          {item.international && <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">International</span>}
-        </div>
-      </div>
-
-      <div className="mb-3">
-        <div className="flex flex-wrap gap-2">
-          {item.subgenres.map(subgenre => (
-            <span key={subgenre} className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">
-              {subgenre}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <p className="text-gray-700 text-sm mb-4 line-clamp-3">{item.synopsis}</p>
-
-      {/* LawYou's Validity Verdict - same font and size as synopsis */}
       <p className="text-gray-700 text-sm mb-4">
         <span className="font-medium">LawYou's Validity Verdict: </span>
         <span className="inline-flex items-center ml-1">
@@ -1054,7 +1002,6 @@ function LegalStreamingDirectory() {
             <div className="flex items-center space-x-3 mb-2">
               <h3 className="text-lg font-bold text-gray-900 truncate">{item.title}</h3>
               <span className="text-sm text-gray-500">({item.year})</span>
-              {/* LawYou's Take button moved here */}
               {item.hasAnalysis ? (
                 <button 
                   className="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded text-xs font-medium flex items-center"
@@ -1093,7 +1040,6 @@ function LegalStreamingDirectory() {
               ))}
             </div>
             <p className="text-gray-600 text-sm line-clamp-2 mb-2">{item.synopsis}</p>
-            {/* LawYou's Validity Verdict - same font and size as synopsis */}
             <p className="text-gray-600 text-sm">
               <span className="font-medium">LawYou's Validity Verdict: </span>
               <span className="inline-flex items-center ml-1">
@@ -1134,7 +1080,6 @@ function LegalStreamingDirectory() {
               <p className="text-gray-600 mt-1">Your comprehensive guide to legal dramas, comedies, and documentaries</p>
             </div>
             
-            {/* Admin Controls */}
             <div className="mt-4 sm:mt-0 flex items-center space-x-3">
               {isAdminMode ? (
                 <>
@@ -1166,7 +1111,6 @@ function LegalStreamingDirectory() {
         </div>
       </header>
 
-      {/* Admin Login Modal */}
       {showLogin && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
@@ -1200,7 +1144,6 @@ function LegalStreamingDirectory() {
         </div>
       )}
 
-      {/* Admin Form */}
       {showAddForm && <AdminForm />}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
