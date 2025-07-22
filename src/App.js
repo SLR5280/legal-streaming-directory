@@ -1,8 +1,19 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingUp, Eye } from 'lucide-react';
+import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingUp, Eye, Grid3X3, List } from 'lucide-react';
+
+// Rate limiting for clicks
+const rateLimitClicks = () => {
+  const now = Date.now();
+  const lastClick = localStorage.getItem('lastClick');
+  if (lastClick && (now - lastClick) < 1000) {
+    return false; // Too fast, ignore click
+  }
+  localStorage.setItem('lastClick', now);
+  return true;
+};
 
 // Sample comprehensive database with real legal content
-  const legalContentDatabase = [
+const legalContentDatabase = [
   {
     id: 1,
     title: "The Lincoln Lawyer",
@@ -303,7 +314,7 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     hasAnalysis: false,
     analysisUrl: null
   },
-    {
+  {
     id: 16,
     title: "Anatomy of a Fall",
     type: "Movie",
@@ -323,7 +334,7 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     hasAnalysis: true,
     analysisUrl: "https://lawyouamerica.com/anatomy-of-a-fall/"
   },
-{
+  {
     id: 17,
     title: "The Trial",
     type: "Movie",
@@ -343,7 +354,7 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     hasAnalysis: true,
     analysisUrl: "https://lawyouamerica.com/the-trial-by-kafka/"
   },
-{
+  {
     id: 18,
     title: "Marshall",
     type: "Movie",
@@ -382,51 +393,52 @@ function LegalStreamingDirectory() {
   const [sortBy, setSortBy] = useState('title-asc');
   const [showFilters, setShowFilters] = useState(false);
   const [currentView, setCurrentView] = useState('all'); // 'all', 'trending', 'international'
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
 
   // Filter and search logic
   const filteredContent = useMemo(() => {
-  let filtered = legalContentDatabase.filter(item => {
-    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        item.synopsis.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        item.director.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesPlatform = selectedPlatform === 'All Platforms' || 
-                          item.platform === selectedPlatform;
-    
-    const matchesSubgenre = selectedSubgenre === 'All Subgenres' || 
-                          item.subgenres.includes(selectedSubgenre);
-    
-    const matchesType = selectedType === 'All Types' || item.type === selectedType;
+    let filtered = legalContentDatabase.filter(item => {
+      const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          item.synopsis.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          item.director.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesPlatform = selectedPlatform === 'All Platforms' || 
+                            item.platform === selectedPlatform;
+      
+      const matchesSubgenre = selectedSubgenre === 'All Subgenres' || 
+                            item.subgenres.includes(selectedSubgenre);
+      
+      const matchesType = selectedType === 'All Types' || item.type === selectedType;
 
-    const matchesView = currentView === 'all' || 
-                       (currentView === 'trending' && item.trending) ||
-                       (currentView === 'international' && item.international);
-    
-    return matchesSearch && matchesPlatform && matchesSubgenre && matchesType && matchesView;
-  });
+      const matchesView = currentView === 'all' || 
+                         (currentView === 'trending' && item.trending) ||
+                         (currentView === 'international' && item.international);
+      
+      return matchesSearch && matchesPlatform && matchesSubgenre && matchesType && matchesView;
+    });
 
-  // Apply sorting
-  filtered.sort((a, b) => {
-    switch (sortBy) {
-      case 'title-asc':
-        return a.title.localeCompare(b.title);
-      case 'title-desc':
-        return b.title.localeCompare(a.title);
-      case 'year-newest':
-        return b.year - a.year;
-      case 'year-oldest':
-        return a.year - b.year;
-      case 'rating-high':
-        return b.rating - a.rating;
-      case 'rating-low':
-        return a.rating - b.rating;
-      default:
-        return 0;
-    }
-  });
+    // Apply sorting
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'title-asc':
+          return a.title.localeCompare(b.title);
+        case 'title-desc':
+          return b.title.localeCompare(a.title);
+        case 'year-newest':
+          return b.year - a.year;
+        case 'year-oldest':
+          return a.year - b.year;
+        case 'rating-high':
+          return b.rating - a.rating;
+        case 'rating-low':
+          return a.rating - b.rating;
+        default:
+          return 0;
+      }
+    });
 
-  return filtered;
-}, [searchTerm, selectedPlatform, selectedSubgenre, selectedType, currentView, sortBy]);
+    return filtered;
+  }, [searchTerm, selectedPlatform, selectedSubgenre, selectedType, currentView, sortBy]);
 
   const trendingCount = legalContentDatabase.filter(item => item.trending).length;
   const internationalCount = legalContentDatabase.filter(item => item.international).length;
@@ -491,7 +503,8 @@ function LegalStreamingDirectory() {
           <button 
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium flex items-center"
             onClick={() => {
-              // Analytics tracking would go here
+              if (!rateLimitClicks()) return; // Rate limiting protection
+              
               if (item.streamingUrl) {
                 window.open(item.streamingUrl, '_blank');
               } else {
@@ -508,6 +521,7 @@ function LegalStreamingDirectory() {
             <button 
               className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded text-sm font-medium flex items-center"
               onClick={() => {
+                if (!rateLimitClicks()) return; // Rate limiting protection
                 window.open(item.analysisUrl, '_blank');
               }}
               title="Read our analysis"
@@ -526,13 +540,89 @@ function LegalStreamingDirectory() {
         </div>
       </div>
 
-      {!item.currentlyAvailable && item.historicalAvailability.length > 0 && (
+      {!item.currentlyAvailable && item.historicalAvailability && item.historicalAvailability.length > 0 && (
         <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
           <p className="text-sm text-yellow-800">
             <strong>Previously available:</strong> {item.historicalAvailability.join(', ')}
           </p>
         </div>
       )}
+    </div>
+  );
+
+  const ContentListItem = ({ item }) => (
+    <div className="bg-white rounded-lg shadow p-4 hover:shadow-md transition-shadow">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4 flex-1 min-w-0">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center space-x-3 mb-2">
+              <h3 className="text-lg font-bold text-gray-900 truncate">{item.title}</h3>
+              <span className="text-sm text-gray-500">({item.year})</span>
+              {item.trending && <TrendingUp className="w-4 h-4 text-orange-500" title="Trending" />}
+              {item.international && <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">International</span>}
+            </div>
+            <div className="flex items-center space-x-4 mb-2">
+              <div className={`px-2 py-1 rounded text-white text-xs font-medium ${getPlatformColor(item.platform)}`}>
+                {item.platform}
+              </div>
+              <div className="flex items-center">
+                <Star className="w-3 h-3 text-yellow-500 mr-1" />
+                <span className="text-sm">{item.rating}</span>
+              </div>
+              {item.seasons && (
+                <span className="text-sm text-gray-600">{item.seasons} Season{item.seasons !== 1 ? 's' : ''}</span>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-1 mb-2">
+              {item.subgenres.map(subgenre => (
+                <span key={subgenre} className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
+                  {subgenre}
+                </span>
+              ))}
+            </div>
+            <p className="text-gray-600 text-sm line-clamp-2">{item.synopsis}</p>
+          </div>
+        </div>
+        
+        <div className="flex space-x-2 ml-4">
+          <button 
+            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm font-medium flex items-center"
+            onClick={() => {
+              if (!rateLimitClicks()) return;
+              
+              if (item.streamingUrl) {
+                window.open(item.streamingUrl, '_blank');
+              } else {
+                window.open(item.platformUrl, '_blank');
+              }
+            }}
+          >
+            <Play className="w-4 h-4 mr-1" />
+            Watch
+          </button>
+          
+          {item.hasAnalysis ? (
+            <button 
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-2 rounded text-sm font-medium flex items-center"
+              onClick={() => {
+                if (!rateLimitClicks()) return;
+                window.open(item.analysisUrl, '_blank');
+              }}
+              title="Read our analysis"
+            >
+              <ExternalLink className="w-4 h-4" />
+            </button>
+          ) : (
+            <button 
+              className="bg-gray-300 text-gray-500 px-2 py-2 rounded text-sm font-medium flex items-center cursor-not-allowed"
+              disabled
+              title="Analysis coming soon"
+            >
+              <ExternalLink className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 
@@ -613,7 +703,10 @@ function LegalStreamingDirectory() {
                   className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="Search by title, synopsis, or director..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => {
+                    const sanitized = e.target.value.replace(/[<>]/g, '').trim();
+                    setSearchTerm(sanitized);
+                  }}
                 />
               </div>
             </div>
@@ -625,25 +718,36 @@ function LegalStreamingDirectory() {
               <Filter className="h-4 w-4 mr-2" />
               Filters
             </button>
+
+            {/* View Toggle */}
+            <div className="flex rounded-md shadow-sm">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`px-3 py-2 text-sm font-medium rounded-l-md border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                  viewMode === 'grid'
+                    ? 'bg-indigo-600 text-white border-indigo-600'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
+                title="Grid view"
+              >
+                <Grid3X3 className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`px-3 py-2 text-sm font-medium rounded-r-md border-t border-r border-b focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                  viewMode === 'list'
+                    ? 'bg-indigo-600 text-white border-indigo-600'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
+                title="List view"
+              >
+                <List className="h-4 w-4" />
+              </button>
+            </div>
           </div>
 
           {showFilters && (
             <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
-            <div>
-  <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
-  <select
-    value={sortBy}
-    onChange={(e) => setSortBy(e.target.value)}
-    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-  >
-    <option value="title-asc">Title A-Z</option>
-    <option value="title-desc">Title Z-A</option>
-    <option value="year-newest">Newest First</option>
-    <option value="year-oldest">Oldest First</option>
-    <option value="rating-high">Highest Rated</option>
-    <option value="rating-low">Lowest Rated</option>
-  </select>
-</div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Platform</label>
                 <select
@@ -682,6 +786,22 @@ function LegalStreamingDirectory() {
                   ))}
                 </select>
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="title-asc">Title A-Z</option>
+                  <option value="title-desc">Title Z-A</option>
+                  <option value="year-newest">Newest First</option>
+                  <option value="year-oldest">Oldest First</option>
+                  <option value="rating-high">Highest Rated</option>
+                  <option value="rating-low">Lowest Rated</option>
+                </select>
+              </div>
             </div>
           )}
         </div>
@@ -696,17 +816,29 @@ function LegalStreamingDirectory() {
           </div>
         ) : (
           <>
-            <div className="mb-6">
+            <div className="mb-6 flex items-center justify-between">
               <p className="text-gray-600">
                 Showing {filteredContent.length} result{filteredContent.length !== 1 ? 's' : ''}
                 {searchTerm && ` for "${searchTerm}"`}
               </p>
+              <div className="text-sm text-gray-500">
+                {viewMode === 'grid' ? 'Grid View' : 'List View'}
+              </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredContent.map(item => (
-                <ContentCard key={item.id} item={item} />
-              ))}
-            </div>
+            
+            {viewMode === 'grid' ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredContent.map(item => (
+                  <ContentCard key={item.id} item={item} />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {filteredContent.map(item => (
+                  <ContentListItem key={item.id} item={item} />
+                ))}
+              </div>
+            )}
           </>
         )}
       </div>
