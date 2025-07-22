@@ -303,6 +303,66 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     hasAnalysis: false,
     analysisUrl: null
   }
+    {
+    id: 16,
+    title: "Anatomy of a Fall",
+    type: "Movie",
+    year: 2023,
+    subgenres: ["Criminal", "International"],
+    platform: "Hulu",
+    currentlyAvailable: true,
+    rating: 8.9,
+    synopsis: "A woman is suspected of murder after her husband's death.",
+    director: "Justine Triet",
+    seasons: null,
+    trending: false,
+    international: true,
+    historicalAvailability: null,
+    streamingUrl: "https://www.hulu.com/movie/anatomy-of-a-fall-94f53938-6240-42b4-abef-8be1d1c39d72",
+    platformUrl: "https://www.hulu.com/",
+    hasAnalysis: true,
+    analysisUrl: "https://lawyouamerica.com/anatomy-of-a-fall/"
+  }
+{
+    id: 17,
+    title: "The Trial",
+    type: "Movie",
+    year: 1962,
+    subgenres: ["Criminal"],
+    platform: "Amazon",
+    currentlyAvailable: true,
+    rating: 7.6,
+    synopsis: "A man is arrested and stands trial, but he is never made aware of the charges against him.",
+    director: "Orson Welles",
+    seasons: null,
+    trending: false,
+    international: false,
+    historicalAvailability: null,
+    streamingUrl: "https://www.amazon.com/Trial-Jess-Hahn/dp/B0CC7SFQJW",
+    platformUrl: "https://www.amazon.com/",
+    hasAnalysis: true,
+    analysisUrl: "https://lawyouamerica.com/the-trial-by-kafka/"
+  }
+{
+    id: 18,
+    title: "Marshall",
+    type: "Movie",
+    year: 2017,
+    subgenres: ["Criminal"],
+    platform: "HBO Max",
+    currentlyAvailable: true,
+    rating: 7.3,
+    synopsis: "Thurgood Marshall, who would become the first African-American Supreme Court Justice, battles through one of his career-defining cases.",
+    director: "Reginald Hudlin",
+    seasons: null,
+    trending: false,
+    international: false,
+    historicalAvailability: null,
+    streamingUrl: "https://www.hbomax.com/movies/marshall/efca3fd1-0400-480b-896e-031fe850e02e",
+    platformUrl: "https://www.hbomax.com/",
+    hasAnalysis: true,
+    analysisUrl: "https://lawyouamerica.com/marshall-movie/"
+  }
 ];
 
 const platforms = [
