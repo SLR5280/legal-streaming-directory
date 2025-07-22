@@ -302,7 +302,7 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     platformUrl: "https://www.netflix.com/",
     hasAnalysis: false,
     analysisUrl: null
-  }
+  },
     {
     id: 16,
     title: "Anatomy of a Fall",
@@ -322,7 +322,7 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     platformUrl: "https://www.hulu.com/",
     hasAnalysis: true,
     analysisUrl: "https://lawyouamerica.com/anatomy-of-a-fall/"
-  }
+  },
 {
     id: 17,
     title: "The Trial",
@@ -342,7 +342,7 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     platformUrl: "https://www.amazon.com/",
     hasAnalysis: true,
     analysisUrl: "https://lawyouamerica.com/the-trial-by-kafka/"
-  }
+  },
 {
     id: 18,
     title: "Marshall",
@@ -362,7 +362,7 @@ import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingU
     platformUrl: "https://www.hbomax.com/",
     hasAnalysis: true,
     analysisUrl: "https://lawyouamerica.com/marshall-movie/"
-  }
+  },
 ];
 
 const platforms = [
