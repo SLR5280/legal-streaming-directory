@@ -1,5 +1,367 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Filter, ExternalLink, Calendar, Star, Play, Bookmark, TrendingUp, Eye, Grid, List } from 'lucide-react';
+// Sample comprehensive database with real legal content
+const legalContentDatabase = [
+  {
+    id: 1,
+    title: "The Lincoln Lawyer",
+    type: "TV Series",
+    year: 2022,
+    subgenres: ["Criminal", "Civil"],
+    platform: "Netflix",
+    currentlyAvailable: true,
+    validityVerdict: 3, // 1-3 gavels for legal accuracy
+    synopsis: "Mickey Haller runs his law practice from his Lincoln Town Car while handling high-stakes cases in Los Angeles.",
+    director: "David E. Kelley",
+    seasons: 3,
+    trending: true,
+    international: false,
+    historicalAvailability: ["Netflix (2022-present)"],
+    streamingUrl: "https://www.netflix.com/title/81303831",
+    platformUrl: "https://www.netflix.com",
+    hasAnalysis: true,
+    analysisUrl: "https://lawyouamerica.com/pop-court/the-lincoln-lawyer"
+  },
+  {
+    id: 2,
+    title: "Suits",
+    type: "TV Series", 
+    year: 2011,
+    subgenres: ["Corporate"],
+    platform: "Netflix",
+    currentlyAvailable: true,
+    validityVerdict: 2,
+    synopsis: "A brilliant college dropout works at a top law firm despite never attending law school.",
+    director: "Aaron Korsh",
+    seasons: 9,
+    trending: true,
+    international: false,
+    historicalAvailability: ["USA Network (2011-2019)", "Netflix (2017-present)"],
+    streamingUrl: "https://www.netflix.com/title/70195800",
+    platformUrl: "https://www.netflix.com",
+    hasAnalysis: false,
+    analysisUrl: null
+  },
+  {
+    id: 3,
+    title: "Better Call Saul",
+    type: "TV Series",
+    year: 2015,
+    subgenres: ["Criminal"],
+    platform: "Netflix",
+    currentlyAvailable: true,
+    validityVerdict: 3,
+    synopsis: "Prequel to Breaking Bad following Jimmy McGill's transformation into Saul Goodman.",
+    director: "Vince Gilligan",
+    seasons: 6,
+    trending: false,
+    international: false,
+    historicalAvailability: ["AMC (2015-2022)", "Netflix (2016-present)"],
+    streamingUrl: "https://www.netflix.com/title/80021955",
+    platformUrl: "https://www.netflix.com",
+    hasAnalysis: false,
+    analysisUrl: null
+  },
+  {
+    id: 4,
+    title: "The Good Wife",
+    type: "TV Series",
+    year: 2009,
+    subgenres: ["Criminal", "Civil", "Family"],
+    platform: "Amazon Prime",
+    currentlyAvailable: true,
+    validityVerdict: 3,
+    synopsis: "Alicia Florrick returns to law after her politician husband's scandal.",
+    director: "Robert King",
+    seasons: 7,
+    trending: false,
+    international: false,
+    historicalAvailability: ["CBS (2009-2016)", "Amazon Prime (2018-present)", "Hulu (2020-2023)"],
+    streamingUrl: "https://www.amazon.com/The-Good-Wife-Season-1/dp/B0064MGU98",
+    platformUrl: "https://www.amazon.com/gp/video/storefront",
+    hasAnalysis: false,
+    analysisUrl: null
+  },
+  {
+    id: 5,
+    title: "Silk",
+    type: "TV Series",
+    year: 2011,
+    subgenres: ["Criminal"],
+    platform: "Amazon Prime",
+    currentlyAvailable: true,
+    validityVerdict: 3,
+    synopsis: "British barristers compete for silk status at a London chambers.",
+    director: "Peter Moffat",
+    seasons: 3,
+    trending: false,
+    international: true,
+    historicalAvailability: ["BBC One (2011-2014)", "BritBox (2020-present)"],
+    streamingUrl: "https://www.amazon.com/Silk-Season-1/dp/B00ESB68HQ",
+    platformUrl: "https://www.amazon.com",
+    hasAnalysis: false,
+    analysisUrl: null
+  },
+  {
+    id: 6,
+    title: "The Split",
+    type: "TV Series",
+    year: 2018,
+    subgenres: ["Family"],
+    platform: "Amazon Prime",
+    currentlyAvailable: true,
+    validityVerdict: 2,
+    synopsis: "Family of divorce lawyers navigate professional and personal relationships.",
+    director: "Abi Morgan",
+    seasons: 3,
+    trending: false,
+    international: true,
+    historicalAvailability: ["BBC One (2018-2022)", "BritBox (2021-present)"],
+    streamingUrl: "https://www.amazon.com/The-Split-Season-1/dp/B07D21MHBW",
+    platformUrl: "https://www.amazon.com",
+    hasAnalysis: false,
+    analysisUrl: null
+  },
+  {
+    id: 7,
+    title: "Goliath",
+    type: "TV Series",
+    year: 2016,
+    subgenres: ["Civil", "Corporate"],
+    platform: "Amazon Prime",
+    currentlyAvailable: true,
+    validityVerdict: 2,
+    synopsis: "Disgraced lawyer Billy McBride takes on powerful corporations.",
+    director: "David E. Kelley",
+    seasons: 4,
+    trending: false,
+    international: false,
+    historicalAvailability: ["Amazon Prime (2016-2021)"],
+    streamingUrl: "https://www.amazon.com/Goliath-Season-1/dp/B0875SSWFS",
+    platformUrl: "https://www.amazon.com",
+    hasAnalysis: false,
+    analysisUrl: null
+  },
+  {
+    id: 8,
+    title: "Boston Legal",
+    type: "TV Series",
+    year: 2004,
+    subgenres: ["Civil", "Criminal"],
+    platform: "Hulu",
+    currentlyAvailable: true,
+    validityVerdict: 2,
+    synopsis: "Eccentric lawyers Alan Shore and Denny Crane handle unusual cases.",
+    director: "David E. Kelley",
+    seasons: 5,
+    trending: false,
+    international: false,
+    historicalAvailability: ["ABC (2004-2008)", "Hulu (2019-present)", "Netflix (2015-2018)"],
+    streamingUrl: "https://www.hulu.com/series/boston-legal-2cd2fbc0-6cc2-49d8-a78b-bcd661482db6",
+    platformUrl: "https://www.hulu.com",
+    hasAnalysis: false,
+    analysisUrl: null
+  },
+  {
+    id: 9,
+    title: "Ally McBeal",
+    type: "TV Series",
+    year: 1997,
+    subgenres: ["Civil", "Family"],
+    platform: "Hulu",
+    currentlyAvailable: true,
+    validityVerdict: 1,
+    synopsis: "Young lawyer navigates romance and career at Boston law firm.",
+    director: "David E. Kelley",
+    seasons: 5,
+    trending: false,
+    international: false,
+    historicalAvailability: ["Fox (1997-2002)", "Netflix (2010-2015)", "Tubi (2020-present)"],
+    streamingUrl: "https://www.hulu.com/series/ally-mcbeal-be5f7f99-ad45-40af-986b-550654fb6f52",
+    platformUrl: "https://www.hulu.com",
+    hasAnalysis: false,
+    analysisUrl: null
+  },
+  {
+    id: 10,
+    title: "The Verdict",
+    type: "Movie",
+    year: 1982,
+    subgenres: ["Civil"],
+    platform: "Apple TV+",
+    currentlyAvailable: true,
+    validityVerdict: 3,
+    synopsis: "An alcoholic lawyer takes on a medical malpractice case that could redeem his career.",
+    director: "Sidney Lumet",
+    seasons: null,
+    trending: false,
+    international: false,
+    historicalAvailability: ["HBO Max (2020-present)", "Amazon Prime (2018-2020)"],
+    streamingUrl: "https://tv.apple.com/us/movie/the-verdict/umc.cmc.1ur632crpht2qe010rai5iw7d",
+    platformUrl: "https://tv.apple.com/",
+    hasAnalysis: false,
+    analysisUrl: null
+  },
+  {
+    id: 11,
+    title: "Rake",
+    type: "TV Series",
+    year: 2010,
+    subgenres: ["Criminal"],
+    platform: "Pluto TV",
+    currentlyAvailable: true,
+    validityVerdict: 2,
+    synopsis: "Self-destructive Australian barrister takes on impossible cases.",
+    director: "Peter Duncan",
+    seasons: 5,
+    trending: false,
+    international: true,
+    historicalAvailability: ["ABC Australia (2010-2018)", "Acorn TV (2019-present)", "Netflix (2016-2019)"],
+    streamingUrl: "https://pluto.tv/us/on-demand/series/68228748a21058b98fed9a36/season/1?utm_medium=textsearch&utm_source=google",
+    platformUrl: "https://pluto.tv/",
+    hasAnalysis: false,
+    analysisUrl: null
+  },
+  {
+    id: 12,
+    title: "Your Honor",
+    type: "TV Series",
+    year: 2020,
+    subgenres: ["Criminal", "Family"],
+    platform: "Netflix",
+    currentlyAvailable: true,
+    validityVerdict: 2,
+    synopsis: "A judge compromises his integrity when his son is involved in a hit-and-run.",
+    director: "Peter Moffat",
+    seasons: 2,
+    trending: true,
+    international: false,
+    historicalAvailability: ["Showtime (2020-2023)", "Paramount+ (2021-present)"],
+    streamingUrl: "https://www.netflix.com/title/81684531",
+    platformUrl: "https://www.netflix.com/",
+    hasAnalysis: false,
+    analysisUrl: null
+  },
+  {
+    id: 13,
+    title: "Family Law",
+    type: "TV Series",
+    year: 2021,
+    subgenres: ["Family"],
+    platform: "The CW",
+    currentlyAvailable: true,
+    validityVerdict: 2,
+    synopsis: "Canadian family lawyer rebuilds her career and relationships.",
+    director: "Susin Nielsen",
+    seasons: 4,
+    trending: false,
+    international: true,
+    historicalAvailability: ["CBC (2021-present)", "The CW (2022-present)"],
+    streamingUrl: "https://www.cwtv.com/shows/family-law/",
+    platformUrl: "https://www.cwtv.com/",
+    hasAnalysis: false,
+    analysisUrl: null
+  },
+  {
+    id: 14,
+    title: "A Few Good Men", 
+    type: "Movie",
+    year: 1992,
+    subgenres: ["Criminal"],
+    platform: "Pluto TV",
+    currentlyAvailable: true,
+    validityVerdict: 3,
+    synopsis: "Military lawyers defend Marines accused of murder in this courtroom drama.",
+    director: "Rob Reiner",
+    seasons: null,
+    trending: false,
+    international: false,
+    historicalAvailability: ["Netflix (2023-present)", "Amazon Prime (2018-2022)", "Hulu (2016-2020)"],
+    streamingUrl: "https://pluto.tv/us/search/details/movies/64c013550a21a300132add4a?utm_medium=textsearch&utm_source=google",
+    platformUrl: "https://www.pluto.tv/",
+    hasAnalysis: false,
+    analysisUrl: null
+  },
+  {
+    id: 15,
+    title: "When They See Us",
+    type: "Limited Series",
+    year: 2019,
+    subgenres: ["Criminal"],
+    platform: "Netflix",
+    currentlyAvailable: true,
+    validityVerdict: 3,
+    synopsis: "True story of the Central Park Five and the injustice they faced.",
+    director: "Ava DuVernay",
+    seasons: 1,
+    trending: false,
+    international: false,
+    historicalAvailability: ["Netflix (2019-present)"],
+    streamingUrl: "https://www.netflix.com/title/80200549",
+    platformUrl: "https://www.netflix.com/",
+    hasAnalysis: false,
+    analysisUrl: null
+  },
+  {
+    id: 16,
+    title: "Anatomy of a Fall",
+    type: "Movie",
+    year: 2023,
+    subgenres: ["Criminal", "International"],
+    platform: "Hulu",
+    currentlyAvailable: true,
+    validityVerdict: 3,
+    synopsis: "A woman is suspected of murder after her husband's death.",
+    director: "Justine Triet",
+    seasons: null,
+    trending: false,
+    international: true,
+    historicalAvailability: null,
+    streamingUrl: "https://www.hulu.com/movie/anatomy-of-a-fall-94f53938-6240-42b4-abef-8be1d1c39d72",
+    platformUrl: "https://www.hulu.com/",
+    hasAnalysis: true,
+    analysisUrl: "https://lawyouamerica.com/anatomy-of-a-fall/"
+  },
+  {
+    id: 17,
+    title: "The Trial",
+    type: "Movie",
+    year: 1962,
+    subgenres: ["Criminal"],
+    platform: "Amazon",
+    currentlyAvailable: true,
+    validityVerdict: 2,
+    synopsis: "A man is arrested and stands trial, but he is never made aware of the charges against him.",
+    director: "Orson Welles",
+    seasons: null,
+    trending: false,
+    international: false,
+    historicalAvailability: null,
+    streamingUrl: "https://www.amazon.com/Trial-Jess-Hahn/dp/B0CC7SFQJW",
+    platformUrl: "https://www.amazon.com/",
+    hasAnalysis: true,
+    analysisUrl: "https://lawyouamerica.com/the-trial-by-kafka/"
+  },
+  {
+    id: 18,
+    title: "Marshall",
+    type: "Movie",
+    year: 2017,
+    subgenres: ["Criminal"],
+    platform: "HBO Max",
+    currentlyAvailable: true,
+    validityVerdict: 3,
+    synopsis: "Thurgood Marshall, who would become the first African-American Supreme Court Justice, battles through one of his career-defining cases.",
+    director: "Reginald Hudlin",
+    seasons: null,
+    trending: false,
+    international: false,
+    historicalAvailability: null,
+    streamingUrl: "https://www.hbomax.com/movies/marshall/efca3fd1-0400-480b-896e-031fe850e02e",
+    platformUrl: "https://www.hbomax.com/",
+    hasAnalysis: true,
+    analysisUrl: "https://lawyouamerica.com/marshall-movie/"
+  },
+];import React, { useState, useEffect, useMemo } from 'react';
+import { Search, Filter, ExternalLink, Calendar, Gavel, Play, Bookmark, TrendingUp, Eye, Grid, List } from 'lucide-react';
 
 // Rate limiting for clicks
 const rateLimitClicks = () => {
@@ -22,7 +384,7 @@ const legalContentDatabase = [
     subgenres: ["Criminal", "Civil"],
     platform: "Netflix",
     currentlyAvailable: true,
-    rating: 7.6,
+    validityVerdict: 3, // 1-3 gavels for legal accuracy
     synopsis: "Mickey Haller runs his law practice from his Lincoln Town Car while handling high-stakes cases in Los Angeles.",
     director: "David E. Kelley",
     seasons: 3,
@@ -42,7 +404,7 @@ const legalContentDatabase = [
     subgenres: ["Corporate"],
     platform: "Netflix",
     currentlyAvailable: true,
-    rating: 8.5,
+    validityVerdict: 2,
     synopsis: "A brilliant college dropout works at a top law firm despite never attending law school.",
     director: "Aaron Korsh",
     seasons: 9,
@@ -62,7 +424,7 @@ const legalContentDatabase = [
     subgenres: ["Criminal"],
     platform: "Netflix",
     currentlyAvailable: true,
-    rating: 9.0,
+    validityVerdict: 3,
     synopsis: "Prequel to Breaking Bad following Jimmy McGill's transformation into Saul Goodman.",
     director: "Vince Gilligan",
     seasons: 6,
@@ -82,7 +444,7 @@ const legalContentDatabase = [
     subgenres: ["Criminal", "Civil", "Family"],
     platform: "Amazon Prime",
     currentlyAvailable: true,
-    rating: 8.4,
+    validityVerdict: 3,
     synopsis: "Alicia Florrick returns to law after her politician husband's scandal.",
     director: "Robert King",
     seasons: 7,
@@ -429,9 +791,9 @@ function LegalStreamingDirectory() {
         case 'year-oldest':
           return a.year - b.year;
         case 'rating-high':
-          return b.rating - a.rating;
+          return b.validityVerdict - a.validityVerdict;
         case 'rating-low':
-          return a.rating - b.rating;
+          return a.validityVerdict - b.validityVerdict;
         default:
           return 0;
       }
@@ -457,6 +819,23 @@ function LegalStreamingDirectory() {
       'The CW': 'bg-emerald-600'
     };
     return colors[platform] || 'bg-gray-500';
+  };
+
+  const ValidityVerdict = ({ rating }) => {
+    const gavels = [];
+    for (let i = 1; i <= 3; i++) {
+      gavels.push(
+        <Gavel 
+          key={i} 
+          className={`w-4 h-4 ${i <= rating ? 'text-amber-500' : 'text-gray-300'}`} 
+        />
+      );
+    }
+    return (
+      <div className="flex items-center" title={`Legal Accuracy: ${rating}/3 gavels`}>
+        {gavels}
+      </div>
+    );
   };
 
   const ContentCard = ({ item }) => (
@@ -491,8 +870,8 @@ function LegalStreamingDirectory() {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <div className="flex items-center">
-            <Star className="w-4 h-4 text-yellow-500 mr-1" />
-            <span className="text-sm font-medium">{item.rating}</span>
+            <span className="text-xs font-medium text-gray-600 mr-2">Validity Verdict:</span>
+            <ValidityVerdict rating={item.validityVerdict} />
           </div>
           {item.seasons && (
             <span className="text-sm text-gray-600">{item.seasons} Season{item.seasons !== 1 ? 's' : ''}</span>
@@ -501,7 +880,7 @@ function LegalStreamingDirectory() {
         
         <div className="flex space-x-2">
           <button 
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium flex items-center"
+            className={`hover:opacity-90 text-white px-4 py-2 rounded text-sm font-medium flex items-center ${getPlatformColor(item.platform)}`}
             onClick={() => {
               if (!rateLimitClicks()) return; // Rate limiting protection
               
@@ -513,7 +892,7 @@ function LegalStreamingDirectory() {
             }}
           >
             <Play className="w-4 h-4 mr-1" />
-            Watch Now
+            {item.platform}
           </button>
           
           {/* Analysis button - only show if analysis exists */}
@@ -566,8 +945,8 @@ function LegalStreamingDirectory() {
                 {item.platform}
               </div>
               <div className="flex items-center">
-                <Star className="w-3 h-3 text-yellow-500 mr-1" />
-                <span className="text-sm">{item.rating}</span>
+                <span className="text-xs text-gray-600 mr-2">Validity:</span>
+                <ValidityVerdict rating={item.validityVerdict} />
               </div>
               {item.seasons && (
                 <span className="text-sm text-gray-600">{item.seasons} Season{item.seasons !== 1 ? 's' : ''}</span>
@@ -586,7 +965,7 @@ function LegalStreamingDirectory() {
         
         <div className="flex space-x-2 ml-4">
           <button 
-            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm font-medium flex items-center"
+            className={`hover:opacity-90 text-white px-3 py-2 rounded text-sm font-medium flex items-center ${getPlatformColor(item.platform)}`}
             onClick={() => {
               if (!rateLimitClicks()) return;
               
@@ -598,7 +977,7 @@ function LegalStreamingDirectory() {
             }}
           >
             <Play className="w-4 h-4 mr-1" />
-            Watch
+            {item.platform}
           </button>
           
           {item.hasAnalysis ? (
@@ -635,16 +1014,6 @@ function LegalStreamingDirectory() {
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Legal Streaming Directory</h1>
               <p className="text-gray-600 mt-1">Your comprehensive guide to legal dramas, comedies, and documentaries</p>
-            </div>
-            <div className="mt-4 sm:mt-0">
-              <a 
-                href="https://lawyouamerica.com" 
-                target="_blank"
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-              >
-                Visit LawyouAmerica.com
-                <ExternalLink className="ml-2 h-4 w-4" />
-              </a>
             </div>
           </div>
         </div>
@@ -798,8 +1167,8 @@ function LegalStreamingDirectory() {
                   <option value="title-desc">Title Z-A</option>
                   <option value="year-newest">Newest First</option>
                   <option value="year-oldest">Oldest First</option>
-                  <option value="rating-high">Highest Rated</option>
-                  <option value="rating-low">Lowest Rated</option>
+                  <option value="rating-high">Most Accurate</option>
+                  <option value="rating-low">Least Accurate</option>
                 </select>
               </div>
             </div>
