@@ -962,7 +962,7 @@ function LegalStreamingDirectory() {
         </div>
       )}
     </div>
-  );text-white px-2 py-1 rounded text-xs font-medium flex items-center"
+  className="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded text-xs font-medium flex items-center"
                 onClick={() => {
                   if (!rateLimitClicks()) return;
                   window.open(item.analysisUrl, '_blank');
