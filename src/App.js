@@ -1,3 +1,17 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import { Search, Filter, ExternalLink, Calendar, Gavel, Play, Bookmark, TrendingUp, Eye, Grid, List } from 'lucide-react';
+
+// Rate limiting for clicks
+const rateLimitClicks = () => {
+  const now = Date.now();
+  const lastClick = localStorage.getItem('lastClick');
+  if (lastClick && (now - lastClick) < 1000) {
+    return false; // Too fast, ignore click
+  }
+  localStorage.setItem('lastClick', now);
+  return true;
+};
+
 // Sample comprehensive database with real legal content
 const legalContentDatabase = [
   {
@@ -359,22 +373,8 @@ const legalContentDatabase = [
     platformUrl: "https://www.hbomax.com/",
     hasAnalysis: true,
     analysisUrl: "https://lawyouamerica.com/marshall-movie/"
-  },
-];
-
-import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Filter, ExternalLink, Calendar, Gavel, Play, Bookmark, TrendingUp, Eye, Grid, List } from 'lucide-react';
-
-// Rate limiting for clicks
-const rateLimitClicks = () => {
-  const now = Date.now();
-  const lastClick = localStorage.getItem('lastClick');
-  if (lastClick && (now - lastClick) < 1000) {
-    return false; // Too fast, ignore click
   }
-  localStorage.setItem('lastClick', now);
-  return true;
-};
+];
 
 const platforms = [
   'All Platforms', 'Netflix', 'Amazon Prime', 'Hulu', 'HBO Max', 
@@ -392,8 +392,8 @@ function LegalStreamingDirectory() {
   const [selectedType, setSelectedType] = useState('All Types');
   const [sortBy, setSortBy] = useState('title-asc');
   const [showFilters, setShowFilters] = useState(false);
-  const [currentView, setCurrentView] = useState('all'); // 'all', 'trending', 'international'
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+  const [currentView, setCurrentView] = useState('all');
+  const [viewMode, setViewMode] = useState('grid');
 
   // Filter and search logic
   const filteredContent = useMemo(() => {
@@ -447,6 +447,7 @@ function LegalStreamingDirectory() {
     const colors = {
       'Netflix': 'bg-red-600',
       'Amazon Prime': 'bg-blue-600',
+      'Amazon': 'bg-blue-600',
       'Hulu': 'bg-green-600',
       'HBO Max': 'bg-purple-600',
       'Apple TV+': 'bg-gray-800',
@@ -520,7 +521,7 @@ function LegalStreamingDirectory() {
           <button 
             className={`hover:opacity-90 text-white px-4 py-2 rounded text-sm font-medium flex items-center ${getPlatformColor(item.platform)}`}
             onClick={() => {
-              if (!rateLimitClicks()) return; // Rate limiting protection
+              if (!rateLimitClicks()) return;
               
               if (item.streamingUrl) {
                 window.open(item.streamingUrl, '_blank');
@@ -533,12 +534,11 @@ function LegalStreamingDirectory() {
             {item.platform}
           </button>
           
-          {/* Analysis button - only show if analysis exists */}
           {item.hasAnalysis ? (
             <button 
               className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded text-sm font-medium flex items-center"
               onClick={() => {
-                if (!rateLimitClicks()) return; // Rate limiting protection
+                if (!rateLimitClicks()) return;
                 window.open(item.analysisUrl, '_blank');
               }}
               title="Read our analysis"
@@ -645,7 +645,6 @@ function LegalStreamingDirectory() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
@@ -657,7 +656,6 @@ function LegalStreamingDirectory() {
         </div>
       </header>
 
-      {/* Navigation Tabs */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8 overflow-x-auto">
@@ -696,7 +694,6 @@ function LegalStreamingDirectory() {
         </div>
       </div>
 
-      {/* Search and Filters */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex flex-col lg:flex-row lg:items-center space-y-4 lg:space-y-0 lg:space-x-4">
@@ -726,7 +723,6 @@ function LegalStreamingDirectory() {
               Filters
             </button>
 
-            {/* View Toggle */}
             <div className="flex rounded-md shadow-sm">
               <button
                 onClick={() => setViewMode('grid')}
@@ -814,7 +810,6 @@ function LegalStreamingDirectory() {
         </div>
       </div>
 
-      {/* Content Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         {filteredContent.length === 0 ? (
           <div className="text-center py-12">
@@ -850,7 +845,6 @@ function LegalStreamingDirectory() {
         )}
       </div>
 
-      {/* Footer */}
       <footer className="bg-white border-t">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
